@@ -1,0 +1,25 @@
+
+
+mutation RefreshToken {
+  refreshToken(token: "REFRESH_TOKEN") {
+    ...TokenData
+  }
+}
+
+fragment UserData on User {
+  id
+  email
+}
+
+fragment AuthTokens on Auth {
+  accessToken
+  refreshToken
+  user {
+    ...UserData
+  }
+}
+
+fragment TokenData on Token {
+  accessToken
+  refreshToken
+}
