@@ -52,9 +52,6 @@ export class Transaction extends BaseModel {
 	cumulativeGasUsed: bigint;
 
 	@Field()
-	isZksyncTx: boolean;
-
-	@Field()
 	blockHash: string;
 
 	@Field(() => Float)

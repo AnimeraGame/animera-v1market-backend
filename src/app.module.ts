@@ -14,6 +14,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NftModule } from './resolvers/nft/nft.module';
 import { TransactionModule } from './resolvers/transaction/transaction.module';
 import { TestModule } from './resolvers/test/test.module';
+import { Web3Module } from './modules/web3.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { TestModule } from './resolvers/test/test.module';
     UserModule,
     NftModule,
     TransactionModule,
+    Web3Module,
 	// TestModule,
     PrismaModule,
     TerminusModule,

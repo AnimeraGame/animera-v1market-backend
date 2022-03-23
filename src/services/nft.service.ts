@@ -75,7 +75,7 @@ export class NftService {
       .then(user => (user ? new User(user) : null));
   }
 
-  async getNftListByUserId(user_id: string): Promise<{ nfts: Nft[] }> | null {
+  async getNftListByUserId(user_id: string): Promise<{ nfts: Nft[]; nftsCount: number }> | null {
     const user = await this.prisma.users.findFirst({
       where: {
         id: user_id
@@ -98,7 +98,7 @@ export class NftService {
 			}
     });
 
-    return { nfts: nftsObjs.map(nft => new Nft(nft)) };
+    return { nfts: nftsObjs.map(nft => new Nft(nft)), nftsCount: nftsObjs.length };
   }
 
   async findNftsAll(

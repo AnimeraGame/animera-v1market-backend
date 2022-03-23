@@ -41,6 +41,8 @@
   },
   "dependencies": {
     "@devoxa/prisma-relay-cursor-connection": "2.0.2",
+    "@maticnetwork/maticjs": "^3.2.4",
+    "@maticnetwork/walletconnect-provider": "^0.0.1-beta.1",
     "@nestjs/common": "^8.0.6",
     "@nestjs/config": "1.0.1",
     "@nestjs/core": "^8.0.6",

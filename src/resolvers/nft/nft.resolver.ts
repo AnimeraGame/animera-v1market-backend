@@ -61,7 +61,7 @@ export class NftResolver {
   @Query(() => Nfts, { name: 'getNftListByUserId' })
   async getNftListByUserId(
     @Args('userId') userId: string
-  ): Promise<{ nfts: Nft[] }> | null {
+  ): Promise<{ nfts: Nft[]; nftsCount: number }> {
     return this.nftService.getNftListByUserId(userId);
   }
 

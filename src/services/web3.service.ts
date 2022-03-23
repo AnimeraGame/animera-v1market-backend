@@ -14,7 +14,6 @@ interface CreateTransactionProps {
   transaction: Transaction;
   blockData: BlockTransactionString;
   abi: Prisma.JsonValue;
-  isZksyncTx: boolean;
 }
 
 interface UpdateNFTByEventProps {
@@ -34,8 +33,7 @@ export class Web3Service implements OnModuleInit {
     transaction,
     transactionReceipt,
     blockData,
-    abi,
-    isZksyncTx
+    abi
   }: CreateTransactionProps): Promise<transactions> {
     const dataToSave = {
       contractId: contractId,
@@ -52,8 +50,7 @@ export class Web3Service implements OnModuleInit {
       value: BigInt(transaction.value),
       datetime: new Date(Number(blockData.timestamp) * 1000),
 			decodedInput: null,
-			txNameFromInput: null,
-      isZksyncTx
+			txNameFromInput: null
     };
     if (transaction?.input) {
       abiDecoder.addABI(abi);
@@ -158,9 +155,10 @@ export class Web3Service implements OnModuleInit {
     for (const {
       address,
       abi,
+      name,
       initialBlockNumber,
       id: contractId,
-      blockchain: { wsProvider },
+      blockchain: { wsProvider, rpcProvider },
       listenEvents
     } of contracts) {
       try {
@@ -178,8 +176,9 @@ export class Web3Service implements OnModuleInit {
 							maxReceivedMessageSize: 10000000, // bytes - default: 8MiB, current: 10Mib
 					 }
 					};
+          console.log('polygon ws provider', rpcProvider);
           const web3 = new Web3(
-            new Web3.providers.WebsocketProvider(wsProvider, options)
+            new Web3.providers.HttpProvider(rpcProvider)
           );
           const contract = new web3.eth.Contract(abi as any, address);
 
@@ -208,93 +207,101 @@ export class Web3Service implements OnModuleInit {
                 ]);
 
 							const logs = transactionReceipt.logs;
-							let transferEvents = logs.map(log => {
-								if(log.topics[0] === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef') {
-									return {
-										from: log.topics[1],
-										to: log.topics[2],
-										tokenId: log.topics[3]
-									}
-								}
-							});
-              console.log(transferEvents);
-              transferEvents = transferEvents.filter((e) => e !== undefined);
-              console.log(transferEvents);
-              await this.updateNFTByEvent(transferEvents);
+              if (name === 'NFT') {
+                let transferEvents = logs.map(log => {
+                  if(log.topics[0] === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef') {
+                    return {
+                      from: log.topics[1],
+                      to: log.topics[2],
+                      tokenId: log.topics[3]
+                    }
+                  }
+                });
+                
+                transferEvents = transferEvents.filter((e) => e !== undefined);
+                await this.updateNFTByEvent(transferEvents);
+              }
               await this.createTransaction({
                 contractId,
                 transaction,
                 transactionReceipt,
                 blockData,
                 abi,
-                isZksyncTx: false
               });
             });
 
-          // Prev transactions sync
-          const txHashListFromAPI = await contract
-            .getPastEvents('allEvents', {
-              fromBlock: initialBlockNumber,
-              toBlock: 'latest'
-            })
-            .then(events =>
-              events.map(({ transactionHash }) => transactionHash)
+          const currentBlockNumber = await web3.eth.getBlockNumber();
+
+          let blockNumber = initialBlockNumber;
+          while(blockNumber < currentBlockNumber) {
+            // Prev transactions sync
+            const txHashListFromAPI = await contract
+              .getPastEvents('allEvents', {
+                fromBlock: blockNumber,
+                toBlock: blockNumber + 1000
+              })
+              .then(events =>
+                events.map(({ transactionHash }) => transactionHash)
+              );
+
+            const txHashListFromDb = await this.prisma.transactions
+              .findMany({
+                where: { contractId: contractId },
+                select: { transactionHash: true }
+              })
+              .then(events =>
+                events.map(({ transactionHash }) => transactionHash)
+              );
+
+            const txHashListFromDB = new Set(txHashListFromDb);
+            const missedTransactions = [...new Set(txHashListFromAPI)].filter(
+              tx => {
+                return !txHashListFromDB.has(tx);
+              }
             );
 
-          const txHashListFromDb = await this.prisma.transactions
-            .findMany({
-              where: { contractId: contractId },
-              select: { transactionHash: true }
-            })
-            .then(events =>
-              events.map(({ transactionHash }) => transactionHash)
-            );
+            if (missedTransactions.length)
+              Logger.log(
+                `${address} contract - noticed ${missedTransactions.length} missed transactions`
+              );
 
-          const txHashListFromDB = new Set(txHashListFromDb);
-          const missedTransactions = [...new Set(txHashListFromAPI)].filter(
-            tx => {
-              return !txHashListFromDB.has(tx);
+            for (const txHash of missedTransactions) {
+              const transaction = await web3.eth.getTransaction(txHash);
+              const transactionReceipt = await web3.eth.getTransactionReceipt(
+                txHash
+              );
+              const logs = transactionReceipt.logs;
+              if (name === 'NFT') {
+                const transferEvents = logs.map(log => {
+                  if(log.topics[0] === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef') {
+                    return {
+                      from: log.topics[1],
+                      to: log.topics[2],
+                      tokenId: log.topics[3]
+                    }
+                  }
+                });
+  
+                if(transferEvents.length > 0) {
+                  await this.updateNFTByEvent(transferEvents);
+                }
+              }
+
+              const blockData = await web3.eth.getBlock(transaction.blockNumber);
+              try {
+                await this.createTransaction({
+                  contractId,
+                  transactionReceipt,
+                  transaction,
+                  blockData,
+                  abi
+                });
+              } catch(err) {
+                Logger.log(`duplicated transactions - ${err}`)
+              }
             }
-          );
 
-          if (missedTransactions.length)
-            Logger.log(
-              `${address} contract - noticed ${missedTransactions.length} missed transactions`
-            );
-
-          for (const txHash of missedTransactions) {
-            const transaction = await web3.eth.getTransaction(txHash);
-            const transactionReceipt = await web3.eth.getTransactionReceipt(
-              txHash
-            );
-						const logs = transactionReceipt.logs;
-						const transferEvents = logs.map(log => {
-							if(log.topics[0] === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef') {
-								return {
-									from: log.topics[1],
-									to: log.topics[2],
-									tokenId: log.topics[3]
-								}
-							}
-						});
-
-						if(transferEvents.length > 0) {
-							await this.updateNFTByEvent(transferEvents);
-						}
-
-            const blockData = await web3.eth.getBlock(transaction.blockNumber);
-						try {
-							await this.createTransaction({
-								contractId,
-								transactionReceipt,
-								transaction,
-								blockData,
-								abi,
-								isZksyncTx: false
-							});
-						} catch(err) {
-							Logger.log(`duplicated transactions - ${err}`)
-						}
+            blockNumber += 1000;
           }
           Logger.log(`${address} contract synchronized`);
         }
