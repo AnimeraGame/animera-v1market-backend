@@ -15,6 +15,7 @@ import { NftModule } from './resolvers/nft/nft.module';
 import { TransactionModule } from './resolvers/transaction/transaction.module';
 import { TestModule } from './resolvers/test/test.module';
 import { Web3Module } from './modules/web3.module';
+import { OfferModule } from './resolvers/offer/offer.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { Web3Module } from './modules/web3.module';
     AuthModule,
     UserModule,
     NftModule,
+    OfferModule,
     TransactionModule,
     Web3Module,
 	// TestModule,

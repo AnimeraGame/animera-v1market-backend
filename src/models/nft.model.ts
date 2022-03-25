@@ -3,19 +3,12 @@ import { Expose } from 'class-transformer';
 import { nft_metadata, Prisma } from '@prisma/client';
 import GraphQLJSON from 'graphql-type-json';
 import { BaseModel } from './base.model';
-import { Contract } from './contract.model';
-import { User } from './user.model';
-import { Transaction } from './transaction.model';
 import { NftMetadata } from './nft_metadata.model';
 
 @ObjectType()
 export class Nft extends BaseModel {
   constructor(partial: Partial<Nft>) {
     super();
-
-    this.transactions = partial.transactions
-      ? partial.transactions.map(transaction => new Transaction(transaction))
-      : null;
 
     Object.assign(this, partial);
   }
@@ -31,13 +24,7 @@ export class Nft extends BaseModel {
   created_at: Date;
 
   @HideField()
-  is_using: boolean;
-
-  @HideField()
-  used_amount: number;
-
-  @HideField()
-  last_used: Date;
+  last_sale: Date;
 
   @HideField()
   is_on_marketplace: boolean;
@@ -124,34 +111,13 @@ export class Nft extends BaseModel {
 
   @Field(() => Boolean)
   @Expose()
-  get isUsing(): boolean {
-    return this.is_using;
-  }
-
-  @Field(() => Boolean)
-  @Expose()
   get isOnMarketplace(): boolean {
     return this.is_on_marketplace;
   }
 
-  @Field(() => Number)
-  @Expose()
-  get usedAmount(): number {
-    return this.used_amount;
-  }
-
   @Field(() => Date)
   @Expose()
-  get lastUsed(): Date {
-    return this.last_used;
+  get lastSale(): Date {
+    return this.last_sale;
   }
-
-  @Field(() => User, { nullable: true })
-  owner: User;
-
-  @Field(() => Contract, { nullable: true })
-  contract: Contract;
-
-  @Field(() => [Transaction], { nullable: true })
-  transactions: Transaction[];
 }

@@ -36,7 +36,7 @@ model contracts {
   updatedAt          DateTime? @updatedAt @db.Timestamp(6)
   listenEvents       Boolean   @default(false)
   initialBlockNumber Int       @default(0)
-  nonce              Int       @default(0)
+  lastBlockNumber    Int       @default(0)
 
   transactions transactions[]
   blockchain   blockchains    @relation(fields: [blockchainId], references: [id])
@@ -72,8 +72,6 @@ model users {
   lastSignAt    DateTime? @db.Timestamp(6)
 
   orders          orders[]
-  direct_offer_creators     direct_offers[] @relation("offer_by")
-  direct_offer_winners      direct_offers[] @relation("offer_winner")
 }
 
 model transactions {
@@ -129,27 +127,24 @@ model nft_metadata {
 
 model direct_offers {
   id         String    @id @default(uuid())
-  type       Int       @default(0) @db.SmallInt
-  bundle_id  String?
   nft_id     String?
-  offer_id   String    @unique
+  token_id    Int
+  token_address String
   price      Float     @default(0.0)
-  currency   String    @default("CBC") @db.VarChar(10)
-  from       String
-  winner_id  String?
-  tx         String    @unique @db.VarChar(100)
-  buy_tx     String?   @unique @db.VarChar(100)
+  seller     String
+  buyer      String?
+  seller_signature String
+  buyer_signature String?
+  tx         String?    @unique @db.VarChar(100)
   status     Int       @default(0) @db.SmallInt
   created_at DateTime  @default(now()) @db.Timestamp(6)
   updated_at DateTime  @updatedAt @db.Timestamp(6)
   closed_at  DateTime? @db.Timestamp(6)
+  expire_at  DateTime? @db.Timestamp(6)
 
   nft       nfts?    @relation(fields: [nft_id], references: [id])
-  from_user users    @relation("offer_by", fields: [from], references: [id])
-  winner    users?   @relation("offer_winner", fields: [winner_id], references: [id])
 
   @@index([nft_id], name: "index_direct_offers_on_nft_id")
   @@index([closed_at], name: "index_direct_offers_on_closed_at")
   @@index([status], name: "index_direct_offers_on_status")
-  @@index([winner_id], name: "index_direct_offers_on_winner_id")
 }

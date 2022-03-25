@@ -102,48 +102,48 @@ export class Web3Service implements OnModuleInit {
 		});
 	}
 
-  async genereateECDSASignature(reward: number, walletAddress: string, userId: string) {
-    const contract = await this.prisma.contracts.findFirst({
-      where: {
-        name: 'prizeDev'
-      }
-    });
-    const rewardsBN = (reward * Math.pow(10, 8)).toString();
-    const expirationTime = Math.floor(moment().valueOf() / 1000) + 86400;
-    const message = EthCrypto.hash.keccak256([
-      { type: "uint256", value: rewardsBN },
-      { type: "uint256", value: contract.nonce },
-      { type: "uint256", value: expirationTime },
-      { type: "address", value: walletAddress },
-    ]);
+  // async genereateECDSASignature(reward: number, walletAddress: string, userId: string) {
+  //   const contract = await this.prisma.contracts.findFirst({
+  //     where: {
+  //       name: 'prizeDev'
+  //     }
+  //   });
+  //   const rewardsBN = (reward * Math.pow(10, 8)).toString();
+  //   const expirationTime = Math.floor(moment().valueOf() / 1000) + 86400;
+  //   const message = EthCrypto.hash.keccak256([
+  //     { type: "uint256", value: rewardsBN },
+  //     { type: "uint256", value: contract.nonce },
+  //     { type: "uint256", value: expirationTime },
+  //     { type: "address", value: walletAddress },
+  //   ]);
 
-    const signature = EthCrypto.sign(process.env.WALLET_PRIVATE_KEY, message);
-    const response = {
-        message: message,
-        signature: signature,
-        public_key: process.env.WALLET_ADDRESS,
-        nonce: contract.nonce,
-        expirationTime: expirationTime,
-        reward: rewardsBN
-    }
-    await this.prisma.users.update({
-      where: {
-        id: userId
-      },
-      data: {
-        lastSignAt: new Date()
-      }
-    });
-    await this.prisma.contracts.update({
-      where: {
-        id: contract.id
-      },
-      data: {
-        nonce: contract.nonce + 1
-      }
-    });
-    return response;
-  }
+  //   const signature = EthCrypto.sign(process.env.WALLET_PRIVATE_KEY, message);
+  //   const response = {
+  //       message: message,
+  //       signature: signature,
+  //       public_key: process.env.WALLET_ADDRESS,
+  //       nonce: contract.nonce,
+  //       expirationTime: expirationTime,
+  //       reward: rewardsBN
+  //   }
+  //   await this.prisma.users.update({
+  //     where: {
+  //       id: userId
+  //     },
+  //     data: {
+  //       lastSignAt: new Date()
+  //     }
+  //   });
+  //   await this.prisma.contracts.update({
+  //     where: {
+  //       id: contract.id
+  //     },
+  //     data: {
+  //       nonce: contract.nonce + 1
+  //     }
+  //   });
+  //   return response;
+  // }
 
   async onModuleInit() {
     const contracts = await this.prisma.contracts.findMany({
@@ -157,6 +157,7 @@ export class Web3Service implements OnModuleInit {
       abi,
       name,
       initialBlockNumber,
+      lastBlockNumber,
       id: contractId,
       blockchain: { wsProvider, rpcProvider },
       listenEvents
@@ -217,7 +218,7 @@ export class Web3Service implements OnModuleInit {
                     }
                   }
                 });
-                
+
                 transferEvents = transferEvents.filter((e) => e !== undefined);
                 await this.updateNFTByEvent(transferEvents);
               }
@@ -232,7 +233,7 @@ export class Web3Service implements OnModuleInit {
 
           const currentBlockNumber = await web3.eth.getBlockNumber();
 
-          let blockNumber = initialBlockNumber;
+          let blockNumber = lastBlockNumber > initialBlockNumber ? lastBlockNumber : initialBlockNumber;
           while(blockNumber < currentBlockNumber) {
             // Prev transactions sync
             const txHashListFromAPI = await contract
@@ -300,6 +301,15 @@ export class Web3Service implements OnModuleInit {
                 Logger.log(`duplicated transactions - ${err}`)
               }
             }
+
+            await this.prisma.contracts.update({
+              where: {
+                id: contractId
+              },
+              data: {
+                lastBlockNumber: blockNumber + 1000
+              }
+            });
 
             blockNumber += 1000;
           }
