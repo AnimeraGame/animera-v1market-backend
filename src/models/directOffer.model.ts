@@ -36,6 +36,15 @@ export class DirectOffer extends BaseModel {
   seller: string;
 
   @HideField()
+  seller_signature: string;
+
+  @Field(() => String, { nullable: true })
+  @Expose()
+  get sellerSignature(): string {
+    return this.seller_signature;
+  }
+
+  @HideField()
   buyer: string;
 
   @Field({ nullable: true })

@@ -17,6 +17,8 @@ import { DirectOffer } from 'src/models/directOffer.model';
 import { DirectOffers } from 'src/models/offers.model';
 import { CreateOfferInput } from './dto/create-offer.input';
 import { UpdateOfferInput } from './dto/update-offer.input';
+import { OrderByInput } from './dto/order-by.input';
+import { PriceWhereInput } from './dto/price-where.input';
 
 @Resolver(() => DirectOffer)
 export class OfferResolver {
@@ -43,14 +45,16 @@ export class OfferResolver {
   async findOffers(
     @Args('page', { nullable: true }) page: number | null,
     @Args('onePage', { nullable: true }) onePage: number | null,
-    @Args('sortList', { nullable: true }) sortList: string | null,
+    @Args('orderBy', { nullable: true }) orderBy: OrderByInput,
+    @Args('price', { nullable: true }) price: PriceWhereInput,
     @Args('status', { nullable: true }) status: number | null,
     @Args('searchText', { nullable: true }) searchText: string | null
   ): Promise<DirectOffers> {
     const { offers, _count } = await this.offerService.findOffersBy(
       onePage,
       page,
-      sortList,
+      orderBy,
+      price,
       status,
       searchText
     );

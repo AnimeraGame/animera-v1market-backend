@@ -11,6 +11,8 @@ import { User } from '../models/user.model';
 import { DirectOffer } from 'src/models/directOffer.model';
 import { CreateOfferInput } from 'src/resolvers/offer/dto/create-offer.input';
 import { UpdateOfferInput } from 'src/resolvers/offer/dto/update-offer.input';
+import { OrderByInput } from 'src/resolvers/offer/dto/order-by.input';
+import { PriceWhereInput } from 'src/resolvers/offer/dto/price-where.input';
 
 @Injectable()
 export class OfferService {
@@ -78,13 +80,18 @@ export class OfferService {
   async findOffersBy(
     take?: number,
     skip?: number,
-    sortList = null,
+    orderBy?: OrderByInput,
+    price?: PriceWhereInput,
     status = 0,
     searchText = null
   ): Promise<{ offers: DirectOffer[]; _count: number }> {
     const offerList = await this.prisma.direct_offers.findMany({
       where: {
-        status
+        status,
+        price: {
+          gt: price.gt ? price.gt : 0,
+          lt: price.lt ? price.lt : 100000000000000
+        }
       },
       include: {
         nft: {
@@ -93,9 +100,7 @@ export class OfferService {
           }
         }
       },
-      orderBy: {
-        created_at: sortList,
-      },
+      orderBy: orderBy.price ? { price: (orderBy.price === 'desc') ? 'desc' : 'asc' } : { created_at: 'desc' },
       take: take || 100,
       skip: skip || 0
     });
@@ -116,7 +121,7 @@ export class OfferService {
 
   async createOffer(seller: User, data: CreateOfferInput): Promise<direct_offers> {
       try {
-        if (seller.walletAddress !== data.sellerWalletAddress) {
+        if (seller.walletAddress.toLowerCase() !== data.sellerWalletAddress.toLowerCase()) {
             throw new BadRequestException("API caller is not offer creator");
         }
         const nft = await this.prisma.nfts.findFirst({
@@ -127,7 +132,7 @@ export class OfferService {
         if (!nft) {
           throw new BadRequestException("There is no NFT with this id");
         }
-        if (nft.owner_wallet_address !== seller.walletAddress) {
+        if (nft.owner_wallet_address.toLowerCase() !== seller.walletAddress.toLowerCase()) {
           throw new BadRequestException("Api caller is not owner of this NFT");
         }
         const oldOffer = await this.prisma.direct_offers.findMany({
