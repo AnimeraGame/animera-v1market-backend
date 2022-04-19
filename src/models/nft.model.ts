@@ -4,7 +4,7 @@ import { nft_metadata, Prisma } from '@prisma/client';
 import GraphQLJSON from 'graphql-type-json';
 import { BaseModel } from './base.model';
 import { NftMetadata } from './nft_metadata.model';
-import { Sale } from './sale.model';
+import { Estate } from './estate.model';
 
 @ObjectType()
 export class Nft extends BaseModel {
@@ -122,6 +122,6 @@ export class Nft extends BaseModel {
     return this.last_sale;
   }
 
-  @Field(() => Sale, { nullable: true })
-  directOffer?: Sale;
+  @Field(() => Estate, { nullable: true })
+  directOffer?: Estate;
 }

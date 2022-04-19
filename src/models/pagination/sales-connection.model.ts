@@ -1,9 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import PaginatedResponse from '../../common/pagination/pagination';
-import { Sale } from '../sale.model';
+import { Estate } from '../estate.model';
 
 @ObjectType()
-export class DirectOfferConnection extends PaginatedResponse(Sale) {
+export class DirectOfferConnection extends PaginatedResponse(Estate) {
   @Field(() => BigInt, { nullable: true })
   endCursor: BigInt;
 

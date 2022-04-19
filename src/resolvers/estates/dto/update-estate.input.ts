@@ -1,7 +1,10 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateOfferInput {
+export class UpdateEstateInput {
+  @Field()
+  id: string;
+
   @Field()
   chainId: number;
 
@@ -27,5 +30,5 @@ export class CreateOfferInput {
   sellerWalletAddress: string;
 
   @Field({ nullable: true })
-  status?: number
+  status?: number;
 }

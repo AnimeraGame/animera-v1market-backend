@@ -19,10 +19,7 @@ import { UserEntity } from '../../decorators/user.decorator';
 
 @Resolver(() => Nft)
 export class NftResolver {
-  constructor(
-    private nftService: NftService,
-    private prisma: PrismaService
-  ) {}
+  constructor(private nftService: NftService, private prisma: PrismaService) {}
 
   @Query(() => Transaction)
   async findNftsByWallet(
@@ -42,9 +39,7 @@ export class NftResolver {
   }
 
   @ResolveField('nftMetadata')
-  async nftMetadata(
-    @Parent() nft: Nft
-  ): Promise<NftMetadata | null> {
+  async nftMetadata(@Parent() nft: Nft): Promise<NftMetadata | null> {
     // return data if nft_metadata already fetched
     if (nft.nft_metadata) return new NftMetadata(nft.nft_metadata);
 
@@ -62,6 +57,7 @@ export class NftResolver {
   async getNftListByUserId(
     @Args('userId') userId: string
   ): Promise<{ nfts: Nft[]; nftsCount: number }> {
+    console.log('userid', userId);
     return this.nftService.getNftListByUserId(userId);
   }
 
@@ -74,7 +70,7 @@ export class NftResolver {
     @Args('sortList', { nullable: true }) sortList: string | null,
     @Args('searchText', { nullable: true }) searchText: string | null
   ): Promise<{ nfts: Nft[]; nftsCount: number }> {
-    const { nfts,  _count } = await this.nftService.findNftsAll(
+    const { nfts, _count } = await this.nftService.findNftsAll(
       onePage,
       page,
       sortList,

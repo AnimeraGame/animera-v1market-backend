@@ -8,7 +8,7 @@ import { NftMetadata } from 'src/models/nft_metadata.model';
 import { PrismaService } from './prisma.service';
 import { Nft } from '../models/nft.model';
 import { User } from '../models/user.model';
-import { Sale, SaleStatus } from 'src/models/sale.model';
+import { Estate, EstateType, EstateStatus } from 'src/models/estate.model';
 
 @Injectable()
 export class NftService {
@@ -60,7 +60,7 @@ export class NftService {
 
   async getNftOwner(nft_id: string): Promise<User | null> {
     const nft = await this.prisma.nfts.findFirst({
-      where: { token_id: nft_id },
+      where: { token_id: nft_id }
     });
     if (!nft) return null;
 
@@ -76,7 +76,9 @@ export class NftService {
       .then(user => (user ? new User(user) : null));
   }
 
-  async getNftListByUserId(user_id: string): Promise<{ nfts: Nft[]; nftsCount: number }> | null {
+  async getNftListByUserId(
+    user_id: string
+  ): Promise<{ nfts: Nft[]; nftsCount: number }> | null {
     const user = await this.prisma.users.findFirst({
       where: {
         id: user_id
@@ -90,26 +92,26 @@ export class NftService {
     const nftsObjs = await this.prisma.nfts.findMany({
       where: {
         owner_wallet_address: {
-					contains: user.walletAddress,
-					mode: 'insensitive'
-				}
+          contains: user.walletAddress,
+          mode: 'insensitive'
+        }
       },
-			include: {
-				nft_metadata: true
-			}
+      include: {
+        nft_metadata: true
+      }
     });
 
     const nfts = [];
-    for (let i=0; i<nftsObjs.length; i++) {
-      const offer = await this.prisma.sales.findFirst({
+    for (let i = 0; i < nftsObjs.length; i++) {
+      const offer = await this.prisma.estates.findFirst({
         where: {
           nft_id: nftsObjs[i].id,
-          status: SaleStatus.active
+          status: EstateStatus.active
         }
       });
       const nft = new Nft(nftsObjs[i]);
       if (offer) {
-        nft.directOffer = new Sale(offer);
+        nft.directOffer = new Estate(offer);
       }
       nfts.push(nft);
     }

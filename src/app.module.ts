@@ -15,7 +15,7 @@ import { NftModule } from './resolvers/nft/nft.module';
 import { TransactionModule } from './resolvers/transaction/transaction.module';
 import { TestModule } from './resolvers/test/test.module';
 import { Web3Module } from './modules/web3.module';
-import { SaleModule } from './resolvers/sale/sale.module';
+import { EstateModule } from './resolvers/estates/estates.module';
 
 @Module({
   imports: [
@@ -46,10 +46,10 @@ import { SaleModule } from './resolvers/sale/sale.module';
     AuthModule,
     UserModule,
     NftModule,
-    SaleModule,
+    EstateModule,
     TransactionModule,
     Web3Module,
-	// TestModule,
+    // TestModule,
     PrismaModule,
     TerminusModule,
     EventEmitterModule.forRoot({

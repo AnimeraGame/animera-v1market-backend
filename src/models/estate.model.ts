@@ -9,19 +9,29 @@ import { Expose } from 'class-transformer';
 import { BaseModel } from './base.model';
 import { Nft } from './nft.model';
 
-export enum SaleStatus {
+export enum EstateStatus {
   active = 0,
   finished = 1
 }
 
-registerEnumType(SaleStatus, {
-  name: 'SaleStatus',
+registerEnumType(EstateStatus, {
+  name: 'EstateStatus',
   description: 'Possible offers statuses'
 });
 
+export enum EstateType {
+  sale = 0,
+  offer = 1
+}
+
+registerEnumType(EstateType, {
+  name: 'EstateType',
+  description: 'Offer or Sale'
+});
+
 @ObjectType()
-export class Sale extends BaseModel {
-  constructor(partial: Partial<Sale>) {
+export class Estate extends BaseModel {
+  constructor(partial: Partial<Estate>) {
     super();
 
     Object.assign(this, partial);
@@ -57,8 +67,11 @@ export class Sale extends BaseModel {
     return this.token_address;
   }
 
-  @Field(() => SaleStatus)
-  status: SaleStatus;
+  @Field(() => EstateType)
+  type: EstateType;
+
+  @Field(() => EstateStatus)
+  status: EstateStatus;
 
   @Field(() => Float)
   price: number;

@@ -1,12 +1,15 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class CreateSaleInput {
+export class CreateEstateInput {
   @Field()
   chainId: number;
 
   @Field()
   sellerPrice: number;
+
+  @Field()
+  type: number;
 
   @Field()
   nftId: string;
@@ -27,5 +30,5 @@ export class CreateSaleInput {
   sellerWalletAddress: string;
 
   @Field({ nullable: true })
-  status?: number
+  status?: number;
 }
