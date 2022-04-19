@@ -7,41 +7,41 @@ import {
   Resolver
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { OfferService } from 'src/services/offer.service';
+import { SaleService } from 'src/services/sale.service';
 import { GqlAuthGuard } from '../../guards/gql-auth.guard';
 import { Nfts } from '../../models/nfts.model';
 import { PrismaService } from '../../services/prisma.service';
 import { User } from '../../models/user.model';
 import { UserEntity } from '../../decorators/user.decorator';
-import { CreateOfferInput } from './dto/create-offer.input';
-import { UpdateOfferInput } from './dto/update-offer.input';
+import { Sale } from 'src/models/sale.model';
+import { Sales } from 'src/models/sales.model';
+import { CreateSaleInput } from './dto/create-sale.input';
+import { UpdateSaleInput } from './dto/update-sale.input';
 import { OrderByInput } from './dto/order-by.input';
 import { PriceWhereInput } from './dto/price-where.input';
-import { Offer } from 'src/models/offer.model';
-import { Offers } from 'src/models/offers.model';
 
-@Resolver(() => Offer)
-export class OfferResolver {
-  constructor(private offerService: OfferService, private prisma: PrismaService) {}
+@Resolver(() => Sale)
+export class SaleResolver {
+  constructor(private saleService: SaleService, private prisma: PrismaService) {}
 
-  @Query(() => Offers)
+  @Query(() => Sales)
   async findOfferByWalletAddress(
     @Args('wallet') wallet: string
-  ): Promise<Offers> {
-    const { offers, _count } = await this.offerService.findOffersByWallet(wallet);
+  ): Promise<Sales> {
+    const { sales, _count } = await this.saleService.findSalesByWallet(wallet);
 
-    return new Offers({ offers, _count: _count || 0 });
+    return new Sales({ sales, _count: _count || 0 });
   }
 
-  @Query(() => Offer, { name: 'offer' })
+  @Query(() => Sale, { name: 'offer' })
   async findOfferById(
     @Args('id', { nullable: true }) id: string
-  ): Promise<Offer> | null {
-    const offer = await this.offerService.findOfferById(id);
-    return offer ? new Offer(offer) : null;
+  ): Promise<Sale> | null {
+    const offer = await this.saleService.findSaleById(id);
+    return offer ? new Sale(offer) : null;
   }
 
-  @Query(() => Offers, {})
+  @Query(() => Sales, {})
   async findOffers(
     @Args('page', { nullable: true }) page: number | null,
     @Args('onePage', { nullable: true }) onePage: number | null,
@@ -49,8 +49,8 @@ export class OfferResolver {
     @Args('price', { nullable: true }) price: PriceWhereInput,
     @Args('status', { nullable: true }) status: number | null,
     @Args('searchText', { nullable: true }) searchText: string | null
-  ): Promise<Offers> {
-    const { offers, _count } = await this.offerService.findOffersBy(
+  ): Promise<Sales> {
+    const { sales, _count } = await this.saleService.findSalesBy(
       onePage,
       page,
       orderBy,
@@ -58,28 +58,28 @@ export class OfferResolver {
       status,
       searchText
     );
-    return new Offers({ offers, _count: _count || 0 });
+    return new Sales({ sales, _count: _count || 0 });
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Offer)
-  async createOffer(
+  @Mutation(() => Sale)
+  async createSale(
       @UserEntity() user: User,
-      @Args('data') data: CreateOfferInput
+      @Args('data') data: CreateSaleInput
   ) {
-      return new Offer(
-          await this.offerService.createOffer(user, data)
+      return new Sale(
+          await this.saleService.createSale(user, data)
       )
   }
 
   @UseGuards(GqlAuthGuard)
-  @Mutation(() => Offer)
-  async updateOffer(
+  @Mutation(() => Sale)
+  async updateSale(
       @UserEntity() user: User,
-      @Args('data') data: UpdateOfferInput
+      @Args('data') data: UpdateSaleInput
   ) {
-      return new Offer(
-          await this.offerService.updateOffer(user, data)
+      return new Sale(
+          await this.saleService.updateSale(user, data)
       )
   }
 }

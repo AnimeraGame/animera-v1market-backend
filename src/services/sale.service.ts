@@ -3,25 +3,25 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common';
-import { offers, nfts } from '@prisma/client';
+import { sales, nfts } from '@prisma/client';
 import { NftMetadata } from 'src/models/nft_metadata.model';
 import { PrismaService } from './prisma.service';
 import { Nft } from '../models/nft.model';
 import { User } from '../models/user.model';
-import { Offer } from 'src/models/offer.model';
-import { CreateOfferInput } from 'src/resolvers/offer/dto/create-offer.input';
-import { UpdateOfferInput } from 'src/resolvers/offer/dto/update-offer.input';
+import { Sale } from 'src/models/sale.model';
+import { CreateSaleInput } from 'src/resolvers/sale/dto/create-sale.input';
+import { UpdateSaleInput } from 'src/resolvers/sale/dto/update-sale.input';
 import { OrderByInput } from 'src/resolvers/sale/dto/order-by.input';
 import { PriceWhereInput } from 'src/resolvers/sale/dto/price-where.input';
 
 @Injectable()
-export class OfferService {
+export class SaleService {
   constructor(private prisma: PrismaService) {}
 
-  async findOffersByWallet(
+  async findSalesByWallet(
     wallet: string
-  ): Promise<{ offers: Offer[]; _count: number }> {
-    const offers = await this.prisma.offers.findMany({
+  ): Promise<{ sales: Sale[]; _count: number }> {
+    const sales = await this.prisma.sales.findMany({
       where: {
         seller: wallet
       },
@@ -34,22 +34,22 @@ export class OfferService {
       }
     });
 
-    const res = offers.map(
-      offer =>
-        new Offer({
-          ...offer,
+    const res = sales.map(
+      sale =>
+        new Sale({
+          ...sale,
           nft: new Nft({
-            ...offer.nft,
-            nftMetadata: new NftMetadata(offer.nft.nft_metadata)
+            ...sale.nft,
+            nftMetadata: new NftMetadata(sale.nft.nft_metadata)
           }),
         })
     );
 
-    return { offers: res, _count: res.length };
+    return { sales: res, _count: res.length };
   }
 
-  async findOfferById(id: string): Promise<Offer> {
-    const offer = await this.prisma.offers.findUnique({
+  async findSaleById(id: string): Promise<Sale> {
+    const sale = await this.prisma.sales.findUnique({
       where: {
         id
       },
@@ -62,30 +62,30 @@ export class OfferService {
       }
     });
 
-    if (!offer) {
+    if (!sale) {
       throw new NotFoundException('There is no nft with this id');
     }
 
-    const res = new Offer({
-      ...offer,
+    const res = new Sale({
+      ...sale,
       nft: new Nft({
-        ...offer.nft,
-        nft_metadata: offer.nft.nft_metadata
+        ...sale.nft,
+        nft_metadata: sale.nft.nft_metadata
       })
     });
 
     return res;
   }
 
-  async findOffersBy(
+  async findSalesBy(
     take?: number,
     skip?: number,
     orderBy?: OrderByInput,
     price?: PriceWhereInput,
     status = 0,
     searchText = null
-  ): Promise<{ offers: Offer[]; _count: number }> {
-    const offerList = await this.prisma.offers.findMany({
+  ): Promise<{ sales: Sale[]; _count: number }> {
+    const saleList = await this.prisma.sales.findMany({
       where: {
         status,
         price: {
@@ -105,9 +105,9 @@ export class OfferService {
       skip: skip || 0
     });
 
-    const res = offerList.map(
+    const res = saleList.map(
       offer =>
-        new Offer({
+        new Sale({
           ...offer,
           nft: new Nft({
             ...offer.nft,
@@ -116,10 +116,10 @@ export class OfferService {
         })
     );
 
-    return { offers: res, _count: res.length };
+    return { sales: res, _count: res.length };
   }
 
-  async createOffer(seller: User, data: CreateOfferInput): Promise<offers> {
+  async createSale(seller: User, data: CreateSaleInput): Promise<sales> {
       try {
         if (seller.walletAddress.toLowerCase() !== data.sellerWalletAddress.toLowerCase()) {
             throw new BadRequestException("API caller is not offer creator");
@@ -135,16 +135,16 @@ export class OfferService {
         if (nft.owner_wallet_address.toLowerCase() !== seller.walletAddress.toLowerCase()) {
           throw new BadRequestException("Api caller is not owner of this NFT");
         }
-        const oldOffer = await this.prisma.offers.findMany({
+        const oldSale = await this.prisma.sales.findMany({
           where: {
             token_id: data.tokenId
           }
         });
-        if (oldOffer.length > 0) {
+        if (oldSale.length > 0) {
           throw new BadRequestException("This nft is already on marketplace");
         }
 
-        const offer = await this.prisma.offers.create({
+        const sale = await this.prisma.sales.create({
             data: {
                 nft_id: data.nftId,
                 token_id: data.tokenId,
@@ -168,18 +168,18 @@ export class OfferService {
           }
         });
 
-        return offer;
+        return sale;
       } catch(e) {
           throw new BadRequestException(e.message);
       }
   }
 
-  async updateOffer(owner: User, data: UpdateOfferInput): Promise<offers> {
+  async updateSale(owner: User, data: UpdateSaleInput): Promise<sales> {
     try {
       if (owner.walletAddress !== data.sellerWalletAddress) {
         throw new BadRequestException('Caller is not owner of this sale');
       }
-      const offer = await this.prisma.offers.update({
+      const sale = await this.prisma.sales.update({
         data: {
           nft_id: data.nftId,
           token_id: data.tokenId,
@@ -196,7 +196,7 @@ export class OfferService {
           id: data.id
         }
       });
-      return offer;
+      return sale;
     } catch (e) {
       throw new BadRequestException(e.message);
     }

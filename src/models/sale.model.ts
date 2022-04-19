@@ -5,25 +5,23 @@ import {
   ObjectType,
   registerEnumType
 } from '@nestjs/graphql';
-import { users } from '@prisma/client';
 import { Expose } from 'class-transformer';
 import { BaseModel } from './base.model';
 import { Nft } from './nft.model';
-import { User } from './user.model';
 
-export enum OfferStatus {
+export enum SaleStatus {
   active = 0,
   finished = 1
 }
 
-registerEnumType(OfferStatus, {
-  name: 'OfferStatus',
+registerEnumType(SaleStatus, {
+  name: 'SaleStatus',
   description: 'Possible offers statuses'
 });
 
 @ObjectType()
-export class DirectOffer extends BaseModel {
-  constructor(partial: Partial<DirectOffer>) {
+export class Sale extends BaseModel {
+  constructor(partial: Partial<Sale>) {
     super();
 
     Object.assign(this, partial);
@@ -59,8 +57,8 @@ export class DirectOffer extends BaseModel {
     return this.token_address;
   }
 
-  @Field(() => OfferStatus)
-  status: OfferStatus;
+  @Field(() => SaleStatus)
+  status: SaleStatus;
 
   @Field(() => Float)
   price: number;

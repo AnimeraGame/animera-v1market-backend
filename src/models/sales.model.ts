@@ -1,15 +1,15 @@
 import { Field, HideField, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
-import { Offer } from './offer.model';
+import { Sale } from './sale.model';
 
 @ObjectType()
-export class Offers {
-  constructor(partial: Partial<Offers>) {
+export class Sales {
+  constructor(partial: Partial<Sales>) {
     Object.assign(this, partial);
   }
 
-  @Field(() => [Offer], { nullable: true })
-  offers: Offer[];
+  @Field(() => [Sale], { nullable: true })
+  sales: Sale[];
 
   // count aliases
   @HideField()

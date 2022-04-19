@@ -232,6 +232,7 @@ export class Web3Service implements OnModuleInit {
             });
 
           const currentBlockNumber = await web3.eth.getBlockNumber();
+          console.log('current block number', currentBlockNumber);
 
           let blockNumber = lastBlockNumber > initialBlockNumber ? lastBlockNumber : initialBlockNumber;
           while(blockNumber < currentBlockNumber) {
@@ -239,10 +240,15 @@ export class Web3Service implements OnModuleInit {
             const txHashListFromAPI = await contract
               .getPastEvents('allEvents', {
                 fromBlock: blockNumber,
-                toBlock: blockNumber + 1000
+                toBlock: (currentBlockNumber < blockNumber + 1000) ? currentBlockNumber : blockNumber + 1000
               })
               .then(events =>
-                events.map(({ transactionHash }) => transactionHash)
+                events.map((event) => {
+                  if (name === 'Market') {
+                    console.log('market event', event);
+                  }
+                  return event.transactionHash
+                })
               );
 
             const txHashListFromDb = await this.prisma.transactions
@@ -271,10 +277,11 @@ export class Web3Service implements OnModuleInit {
               const transactionReceipt = await web3.eth.getTransactionReceipt(
                 txHash
               );
+              console.log('transaction receipt', transactionReceipt);
               const logs = transactionReceipt.logs;
               if (name === 'NFT') {
                 const transferEvents = logs.map(log => {
-                  if(log.topics[0] === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef') {
+                  if(log.topics[0] === '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef' && log.address === address) {
                     return {
                       from: log.topics[1],
                       to: log.topics[2],
@@ -286,6 +293,14 @@ export class Web3Service implements OnModuleInit {
                 if(transferEvents.length > 0) {
                   await this.updateNFTByEvent(transferEvents);
                 }
+              }
+
+              if (name === 'Market') {
+                const sellEvents = logs.map(log => {
+                  if (log.topics[0] === '0xc016fc6eec116472bfe0549668f2c0a088bd1924bdac4b36f426b5b8085e132f') {
+                    console.log('sell event', log);
+                  }
+                })
               }
 
               const blockData = await web3.eth.getBlock(transaction.blockNumber);

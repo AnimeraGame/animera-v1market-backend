@@ -8,6 +8,7 @@ import { NftMetadata } from 'src/models/nft_metadata.model';
 import { PrismaService } from './prisma.service';
 import { Nft } from '../models/nft.model';
 import { User } from '../models/user.model';
+import { Sale, SaleStatus } from 'src/models/sale.model';
 
 @Injectable()
 export class NftService {
@@ -98,7 +99,22 @@ export class NftService {
 			}
     });
 
-    return { nfts: nftsObjs.map(nft => new Nft(nft)), nftsCount: nftsObjs.length };
+    const nfts = [];
+    for (let i=0; i<nftsObjs.length; i++) {
+      const offer = await this.prisma.sales.findFirst({
+        where: {
+          nft_id: nftsObjs[i].id,
+          status: SaleStatus.active
+        }
+      });
+      const nft = new Nft(nftsObjs[i]);
+      if (offer) {
+        nft.directOffer = new Sale(offer);
+      }
+      nfts.push(nft);
+    }
+
+    return { nfts: nfts, nftsCount: nfts.length };
   }
 
   async findNftsAll(
