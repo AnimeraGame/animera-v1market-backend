@@ -57,8 +57,14 @@ export class NftResolver {
   async getNftListByUserId(
     @Args('userId') userId: string
   ): Promise<{ nfts: Nft[]; nftsCount: number }> {
-    console.log('userid', userId);
     return this.nftService.getNftListByUserId(userId);
+  }
+
+  @Query(() => Nfts, { name: 'getNftListByWallet' })
+  async getNftListByWallet(
+    @Args('wallet') wallet: string
+  ): Promise<{ nfts: Nft[]; nftsCount: number }> {
+    return this.nftService.getNftListByWallet(wallet);
   }
 
   @UseGuards(GqlAuthGuard)

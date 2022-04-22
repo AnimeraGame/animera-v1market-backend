@@ -184,7 +184,108 @@ export class EstateService {
     return { estates: res, _count: res.length };
   }
 
-  async createEstate(seller: User, data: CreateEstateInput): Promise<estates> {
+  async findOffersBy(
+    wallet: string,
+    take?: number,
+    skip?: number,
+    orderBy?: OrderByInput,
+    price?: PriceWhereInput,
+    status = 0,
+    searchText = null
+  ): Promise<{ offers: Estate[]; _count: number }> {
+    const offerList = await this.prisma.estates.findMany({
+      where: {
+        status,
+        type: EstateType.offer,
+        seller: {
+          equals: wallet,
+          mode: 'insensitive'
+        },
+        price: {
+          gt: price.gt ? price.gt : 0,
+          lt: price.lt ? price.lt : 100000000000000
+        }
+      },
+      include: {
+        nft: {
+          include: {
+            nft_metadata: true
+          }
+        }
+      },
+      orderBy: orderBy.price
+        ? { price: orderBy.price === 'desc' ? 'desc' : 'asc' }
+        : { created_at: 'desc' },
+      take: take || 100,
+      skip: skip || 0
+    });
+
+    const res = offerList.map(
+      offer =>
+        new Estate({
+          ...offer,
+          nft: new Nft({
+            ...offer.nft,
+            nft_metadata: offer.nft.nft_metadata
+          })
+        })
+    );
+
+    return { offers: res, _count: res.length };
+  }
+
+  async findMyOffersBy(
+    wallet: string,
+    take?: number,
+    skip?: number,
+    orderBy?: OrderByInput,
+    price?: PriceWhereInput,
+    status = 0,
+    searchText = null
+  ): Promise<{ myOffers: Estate[]; _count: number }> {
+    const offerList = await this.prisma.estates.findMany({
+      where: {
+        status,
+        type: EstateType.offer,
+        buyer: {
+          equals: wallet,
+          mode: 'insensitive'
+        },
+        price: {
+          gt: price.gt ? price.gt : 0,
+          lt: price.lt ? price.lt : 100000000000000
+        }
+      },
+      include: {
+        nft: {
+          include: {
+            nft_metadata: true
+          }
+        }
+      },
+      orderBy: orderBy.price
+        ? { price: orderBy.price === 'desc' ? 'desc' : 'asc' }
+        : { created_at: 'desc' },
+      take: take || 100,
+      skip: skip || 0
+    });
+
+    const res = offerList.map(
+      offer =>
+        new Estate({
+          ...offer,
+          nft: new Nft({
+            ...offer.nft,
+            nft_metadata: offer.nft.nft_metadata
+          })
+        })
+    );
+
+    return { myOffers: res, _count: res.length };
+  }
+
+	async createEstate(seller: User, data: CreateEstateInput): Promise<estates> {
+		console.log('data ----', data);
     try {
       if (
         seller.walletAddress.toLowerCase() !==
@@ -202,7 +303,8 @@ export class EstateService {
       }
       if (
         nft.owner_wallet_address.toLowerCase() !==
-        seller.walletAddress.toLowerCase()
+          seller.walletAddress.toLowerCase() &&
+        data.type == 0
       ) {
         throw new BadRequestException('Api caller is not owner of this NFT');
       }
@@ -221,7 +323,8 @@ export class EstateService {
           type: data.type,
           token_id: data.tokenId,
           token_address: data.tokenAddress,
-          seller: seller.walletAddress,
+					seller: seller.walletAddress,
+					buyer: data.buyerWalletAddress,
           price: data.sellerPrice,
           seller_signature: data.signature,
           created_at: new Date(Date.now()),

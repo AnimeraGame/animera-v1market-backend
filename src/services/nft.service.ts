@@ -119,6 +119,39 @@ export class NftService {
     return { nfts: nfts, nftsCount: nfts.length };
   }
 
+  async getNftListByWallet(
+    wallet: string
+  ): Promise<{ nfts: Nft[]; nftsCount: number }> | null {
+    const nftsObjs = await this.prisma.nfts.findMany({
+      where: {
+        owner_wallet_address: {
+          contains: wallet,
+          mode: 'insensitive'
+        }
+      },
+      include: {
+        nft_metadata: true
+      }
+    });
+
+    const nfts = [];
+    for (let i = 0; i < nftsObjs.length; i++) {
+      const offer = await this.prisma.estates.findFirst({
+        where: {
+          nft_id: nftsObjs[i].id,
+          status: EstateStatus.active
+        }
+      });
+      const nft = new Nft(nftsObjs[i]);
+      if (offer) {
+        nft.directOffer = new Estate(offer);
+      }
+      nfts.push(nft);
+    }
+
+    return { nfts: nfts, nftsCount: nfts.length };
+  }
+
   async findNftsAll(
     take?: number,
     skip?: number,

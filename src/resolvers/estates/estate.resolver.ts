@@ -79,6 +79,50 @@ export class EsateResolver {
     return new Estates({ estates, _count: _count || 0 });
   }
 
+  @Query(() => Estates, {})
+  async findOffersBy(
+    @Args('wallet', { nullable: true }) wallet: string,
+    @Args('page', { nullable: true }) page: number | null,
+    @Args('onePage', { nullable: true }) onePage: number | null,
+    @Args('orderBy', { nullable: true }) orderBy: OrderByInput,
+    @Args('price', { nullable: true }) price: PriceWhereInput,
+    @Args('status', { nullable: true }) status: number | null,
+    @Args('searchText', { nullable: true }) searchText: string | null
+  ): Promise<Estates> {
+    const { offers, _count } = await this.estateService.findOffersBy(
+      wallet,
+      onePage,
+      page,
+      orderBy,
+      price,
+      status,
+      searchText
+    );
+    return new Estates({ estates: offers, _count: _count || 0 });
+  }
+
+  @Query(() => Estates, {})
+  async findMyOffersBy(
+    @Args('wallet', { nullable: true }) wallet: string,
+    @Args('page', { nullable: true }) page: number | null,
+    @Args('onePage', { nullable: true }) onePage: number | null,
+    @Args('orderBy', { nullable: true }) orderBy: OrderByInput,
+    @Args('price', { nullable: true }) price: PriceWhereInput,
+    @Args('status', { nullable: true }) status: number | null,
+    @Args('searchText', { nullable: true }) searchText: string | null
+  ): Promise<Estates> {
+    const { myOffers, _count } = await this.estateService.findMyOffersBy(
+      wallet,
+      onePage,
+      page,
+      orderBy,
+      price,
+      status,
+      searchText
+    );
+    return new Estates({ estates: myOffers, _count: _count || 0 });
+  }
+
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Estate)
   async createEstate(
