@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { users } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
@@ -12,22 +17,21 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService
-  ) {
-  }
+  ) {}
 
-  validateUser(userId: string): Promise<users> {
+  validateUser(userId: number): Promise<users> {
     return this.prisma.users.findUnique({ where: { id: userId } });
   }
 
   getUserFromToken(token: string): Promise<users> {
-    const id = (this.jwtService.decode(token) as { userId: string }).userId;
+    const id = (this.jwtService.decode(token) as { userId: number }).userId;
     return this.prisma.users.findUnique({
       where: { id }
     });
   }
 
   generateToken(payload: {
-    userId: string;
+    userId: number;
     password?: string;
     is_admin?: boolean;
     method?: string;

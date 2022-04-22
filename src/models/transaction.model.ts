@@ -39,23 +39,23 @@ export class Transaction extends BaseModel {
   @Field()
   from: string;
 
-	@Field()
-	to: string;
+  @Field()
+  to: string;
 
-	@Field(() => Float)
-	gas: bigint;
+  @Field(() => Float)
+  gas: bigint;
 
-	@Field(() => Float)
-	gasPrice: bigint;
+  @Field(() => Float)
+  gasPrice: bigint;
 
-	@Field(() => Float)
-	cumulativeGasUsed: bigint;
+  @Field(() => Float)
+  cumulativeGasUsed: bigint;
 
-	@Field()
-	blockHash: string;
+  @Field()
+  blockHash: string;
 
-	@Field(() => Float)
-	blockNumber: bigint;
+  @Field(() => Float)
+  blockNumber: bigint;
 
   @Field(() => Float)
   value: bigint;

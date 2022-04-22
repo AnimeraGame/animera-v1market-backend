@@ -47,6 +47,7 @@ export class NftResolver {
     return this.prisma.nft_metadata
       .findUnique({
         where: {
+          // @ts-ignore
           id: nft.nft_metadata_id
         }
       })
@@ -55,7 +56,7 @@ export class NftResolver {
 
   @Query(() => Nfts, { name: 'getNftListByUserId' })
   async getNftListByUserId(
-    @Args('userId') userId: string
+    @Args('userId') userId: number
   ): Promise<{ nfts: Nft[]; nftsCount: number }> {
     return this.nftService.getNftListByUserId(userId);
   }

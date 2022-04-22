@@ -53,7 +53,7 @@ export class EsateResolver {
 
   @Query(() => Estate, { name: 'offer' })
   async findEstateById(
-    @Args('id', { nullable: true }) id: string
+    @Args('id', { nullable: true }) id: number
   ): Promise<Estate> | null {
     const offer = await this.estateService.findEstateById(id);
     return offer ? new Estate(offer) : null;

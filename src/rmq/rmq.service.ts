@@ -167,9 +167,7 @@ export class RmqService implements OnModuleInit {
 
   public async createQueue(handler: RMQHandler) {
     await this.subscriptionChannel.addSetup(async (channel: ConfirmChannel) => {
-      const { queue } = await channel.assertQueue(handler.meta.queue, {
-
-      });
+      const { queue } = await channel.assertQueue(handler.meta.queue, {});
 
       await channel.bindQueue(
         queue,
@@ -188,9 +186,10 @@ export class RmqService implements OnModuleInit {
 
           const msgContent = msg.content.toString();
 
-          const response: TRMQResponse = await handler.discoveredMethod.parentClass[
-            handler.discoveredMethod.methodName
-          ](JSON.parse(msgContent));
+          const response: TRMQResponse =
+            await handler.discoveredMethod.parentClass[
+              handler.discoveredMethod.methodName
+            ](JSON.parse(msgContent));
 
           if (response === 'ack') {
             channel.ack(msg, false);

@@ -1,6 +1,4 @@
-import {
-  Injectable
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { users } from '@prisma/client';
 import { PrismaService } from './prisma.service';
 import { User } from '../models/user.model';
@@ -9,13 +7,10 @@ import { CreateUserInput } from '../resolvers/user/dto/create-user.input';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private prisma: PrismaService
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async createUser(user: User, newUserData: CreateUserInput) {
-    const { walletAddress, status, nonce } =
-      newUserData || {};
+    const { walletAddress, status, nonce } = newUserData || {};
 
     return this.prisma.users.create({
       data: {
@@ -59,8 +54,7 @@ export class UserService {
       skip: page * onePage
     });
 
-    const totalCount = await this.prisma.users.count({
-    });
+    const totalCount = await this.prisma.users.count({});
 
     return {
       users: userList.map(user => {

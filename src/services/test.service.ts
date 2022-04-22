@@ -5,16 +5,14 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class TestService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
   async createFakeAccounts(amount: number): Promise<any> {
-		const contract = await this.prisma.contracts.findFirst({
-			where: { name: "NFTDev" },
-			include: {
-				blockchain: true
-			}
-		});
+    const contract = await this.prisma.contracts.findFirst({
+      where: { name: 'NFTDev' },
+      include: {
+        blockchain: true
+      }
+    });
     const web3 = new Web3(contract.blockchain.rpcProvider);
     let lastUserId;
     for (let i = 0; i < amount; i++) {

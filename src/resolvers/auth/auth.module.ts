@@ -30,7 +30,7 @@ import { Web3Service } from 'src/services/web3.service';
   providers: [
     AuthService,
     AuthResolver,
-	  Web3Service,
+    Web3Service,
     UserService,
     JwtStrategy,
     GqlAuthGuard,

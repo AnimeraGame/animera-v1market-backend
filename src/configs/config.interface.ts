@@ -54,21 +54,21 @@ interface LoggerConfig {
 }
 
 interface RabbitMQConfig {
-	readonly exchange: string;
-	readonly name: string;
-	readonly host: string;
-	readonly vhost: string;
-	readonly port: number;
-	readonly username: string;
-	readonly password: string;
+  readonly exchange: string;
+  readonly name: string;
+  readonly host: string;
+  readonly vhost: string;
+  readonly port: number;
+  readonly username: string;
+  readonly password: string;
 }
 
 interface MarketplaceConfig {
   rabbitmqConfig: {
-	exchange: string;
-	exchangeType: RMQExchangeType;
-	mainQueue: string;
-	routingKey: string;
+    exchange: string;
+    exchangeType: RMQExchangeType;
+    mainQueue: string;
+    routingKey: string;
   };
 }
 

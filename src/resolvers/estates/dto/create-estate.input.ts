@@ -12,7 +12,7 @@ export class CreateEstateInput {
   type: number;
 
   @Field()
-  nftId: string;
+  nftId: number;
 
   @Field()
   tokenId: number;
@@ -27,9 +27,9 @@ export class CreateEstateInput {
   signature: string;
 
   @Field()
-	sellerWalletAddress: string;
+  sellerWalletAddress: string;
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   buyerWalletAddress?: string;
 
   @Field({ nullable: true })

@@ -12,9 +12,7 @@ import { UserService } from 'src/services/user.service';
 
 @Resolver(() => User)
 export class UserResolver {
-  constructor(
-    private userService: UserService
-  ) {}
+  constructor(private userService: UserService) {}
 
   @UseGuards(GqlAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
@@ -24,13 +22,13 @@ export class UserResolver {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Query(() => User, { name: 'user'})
+  @Query(() => User, { name: 'user' })
   async user(
     @Args('id', { nullable: true }) id: string,
     @Args('walletAddress', { nullable: true }) walletAddress: string
   ): Promise<User> {
-    const user = await this.userService.findUserById(id, walletAddress)
-    return new User({...user });
+    const user = await this.userService.findUserById(id, walletAddress);
+    return new User({ ...user });
   }
 
   @UseGuards(GqlAuthGuard)
@@ -39,7 +37,7 @@ export class UserResolver {
     @Args('limit', { nullable: true }) limit: number | null,
     @Args('page', { nullable: true }) page: number | null,
     @Args('onePage', { nullable: true }) onePage: number | null,
-    @Args('sortList', { nullable: true }) sortList: string | null,
+    @Args('sortList', { nullable: true }) sortList: string | null
   ): Promise<{ users: User[]; usersCount: number }> {
     const { users, totalCount } = await this.userService.findUsers(
       limit,
@@ -48,6 +46,6 @@ export class UserResolver {
       sortList
     );
 
-    return { users, usersCount:totalCount };
+    return { users, usersCount: totalCount };
   }
 }

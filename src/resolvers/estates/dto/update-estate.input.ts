@@ -3,7 +3,7 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class UpdateEstateInput {
   @Field()
-  id: string;
+  id: number;
 
   @Field()
   chainId: number;
@@ -12,7 +12,7 @@ export class UpdateEstateInput {
   sellerPrice: number;
 
   @Field()
-  nftId: string;
+  nftId: number;
 
   @Field()
   tokenId: number;

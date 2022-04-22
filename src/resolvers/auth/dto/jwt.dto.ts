@@ -1,4 +1,4 @@
 export interface JwtDto {
-  userId: string;
+  userId: number;
   is_admin?: string;
 }

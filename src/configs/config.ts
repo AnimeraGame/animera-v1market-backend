@@ -27,7 +27,7 @@ const config: Config = {
     bcryptSaltOrRound: 10
   },
   adminWallet: {
-	  privKey: process.env.WALLET_PRIVATE_KEY
+    privKey: process.env.WALLET_PRIVATE_KEY
   },
   logger: {
     level: 'info',

@@ -77,7 +77,7 @@ export class NftService {
   }
 
   async getNftListByUserId(
-    user_id: string
+    user_id: number
   ): Promise<{ nfts: Nft[]; nftsCount: number }> | null {
     const user = await this.prisma.users.findFirst({
       where: {
@@ -178,7 +178,7 @@ export class NftService {
     return { nfts: res, _count: res.length };
   }
 
-  async updateNftMetaData(id: string, data: string): Promise<NftMetadata> {
+  async updateNftMetaData(id: number, data: string): Promise<NftMetadata> {
     try {
       const nftMeta = await this.prisma.nft_metadata.update({
         data: {
@@ -196,7 +196,7 @@ export class NftService {
     }
   }
 
-  async updateSaleInfo(id: string, data: string): Promise<Nft> {
+  async updateSaleInfo(id: number, data: string): Promise<Nft> {
     try {
       const nft = await this.prisma.nfts.update({
         data: {

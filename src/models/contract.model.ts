@@ -1,6 +1,11 @@
-import { Field, HideField, ObjectType, registerEnumType } from "@nestjs/graphql";
-import { Expose } from "class-transformer";
-import { BaseModel } from "./base.model";
+import {
+  Field,
+  HideField,
+  ObjectType,
+  registerEnumType
+} from '@nestjs/graphql';
+import { Expose } from 'class-transformer';
+import { BaseModel } from './base.model';
 
 export enum ChainType {
   BSC = 'BSC',

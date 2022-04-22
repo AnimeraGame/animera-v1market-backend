@@ -110,7 +110,7 @@ export class EstateService {
     return { estates: res, _count: res.length };
   }
 
-  async findEstateById(id: string): Promise<Estate> {
+  async findEstateById(id: number): Promise<Estate> {
     const estate = await this.prisma.estates.findUnique({
       where: {
         id
@@ -284,8 +284,8 @@ export class EstateService {
     return { myOffers: res, _count: res.length };
   }
 
-	async createEstate(seller: User, data: CreateEstateInput): Promise<estates> {
-		console.log('data ----', data);
+  async createEstate(seller: User, data: CreateEstateInput): Promise<estates> {
+    console.log('data ----', data);
     try {
       if (
         seller.walletAddress.toLowerCase() !==
@@ -323,8 +323,8 @@ export class EstateService {
           type: data.type,
           token_id: data.tokenId,
           token_address: data.tokenAddress,
-					seller: seller.walletAddress,
-					buyer: data.buyerWalletAddress,
+          seller: seller.walletAddress,
+          buyer: data.buyerWalletAddress,
           price: data.sellerPrice,
           seller_signature: data.signature,
           created_at: new Date(Date.now()),

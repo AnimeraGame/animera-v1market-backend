@@ -19,11 +19,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtDto): Promise<users> {
-		let user = null;
-			user = await this.authService.validateUser(payload.userId);
-		if (!user) {
-			throw new UnauthorizedException();
-		}
-		return user;
+    let user = null;
+    user = await this.authService.validateUser(payload.userId);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    return user;
   }
 }

@@ -12,6 +12,6 @@ export class AuthByWalletInput {
   @IsNotEmpty()
   signature: string;
 
-  @Field({ defaultValue: 'mumbai'})
+  @Field({ defaultValue: 'mumbai' })
   network: string;
 }

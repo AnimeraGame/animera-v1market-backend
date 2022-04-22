@@ -38,7 +38,7 @@ export class Estate extends BaseModel {
   }
 
   @HideField()
-  nft_id?: string;
+  nft_id?: Number;
 
   @Field()
   seller: string;

@@ -4,7 +4,7 @@ import {
   Parent,
   Query,
   ResolveField,
-  Resolver,
+  Resolver
 } from '@nestjs/graphql';
 import web3 from 'web3';
 import * as sigUtil from 'eth-sig-util';
@@ -33,7 +33,7 @@ export class AuthResolver {
     private readonly userService: UserService,
     private readonly web3Service: Web3Service,
     private readonly prisma: PrismaService
-  ) { }
+  ) {}
 
   @Query(() => Nonce)
   async getNonceByWallet(@Args('data') { wallet }: GetNonceByWalletInput) {
@@ -101,7 +101,6 @@ export class AuthResolver {
       userId: user.id
     });
   }
-
 
   @Mutation(() => Token)
   async refreshToken(@Args('token') token: string) {

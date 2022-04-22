@@ -10,5 +10,3 @@ export const ERROR_EVENT = 'error';
 export const CLOSE_EVENT = 'close';
 export const SUBSCRIBE = 'subscribe';
 export const CANCEL_EVENT = 'cancelled';
-
-
