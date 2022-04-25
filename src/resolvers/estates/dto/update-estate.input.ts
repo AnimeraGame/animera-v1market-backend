@@ -15,9 +15,6 @@ export class UpdateEstateInput {
   nftId: number;
 
   @Field()
-  tokenId: number;
-
-  @Field()
   tokenAddress: string;
 
   @Field()

@@ -128,7 +128,6 @@ model nft_metadata {
 model estates {
   id               BigInt    @id @default(autoincrement())
   nft_id           BigInt?
-  token_id         Int
   type             Int
   token_address    String
   price            Float     @default(0.0)

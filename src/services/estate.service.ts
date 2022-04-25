@@ -310,7 +310,7 @@ export class EstateService {
       }
       const oldEstate = await this.prisma.estates.findMany({
         where: {
-          token_id: data.tokenId
+          nft_id: data.nftId
         }
       });
       if (oldEstate.length > 0) {
@@ -321,7 +321,6 @@ export class EstateService {
         data: {
           nft_id: data.nftId,
           type: data.type,
-          token_id: data.tokenId,
           token_address: data.tokenAddress,
           seller: seller.walletAddress,
           buyer: data.buyerWalletAddress,
@@ -357,7 +356,6 @@ export class EstateService {
       const estate = await this.prisma.estates.update({
         data: {
           nft_id: data.nftId,
-          token_id: data.tokenId,
           token_address: data.tokenAddress,
           seller: data.sellerWalletAddress,
           price: data.sellerPrice,

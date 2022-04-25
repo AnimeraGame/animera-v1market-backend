@@ -16,6 +16,7 @@ import { TransactionModule } from './resolvers/transaction/transaction.module';
 import { TestModule } from './resolvers/test/test.module';
 import { Web3Module } from './modules/web3.module';
 import { EstateModule } from './resolvers/estates/estates.module';
+import { BigIntScalar } from './common/scalars/bigint.scalar';
 
 @Module({
   imports: [
@@ -70,7 +71,11 @@ import { EstateModule } from './resolvers/estates/estates.module';
     })
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [
+    AppService,
+    AppResolver,
+    BigIntScalar,
+  ],
   exports: []
 })
 export class AppModule {}

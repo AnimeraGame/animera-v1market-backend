@@ -20,23 +20,28 @@ export class AuthService {
   ) {}
 
   validateUser(userId: number): Promise<users> {
-    return this.prisma.users.findUnique({ where: { id: userId } });
+    return this.prisma.users.findUnique({ where: { id: BigInt(userId) } });
   }
 
   getUserFromToken(token: string): Promise<users> {
-    const id = (this.jwtService.decode(token) as { userId: number }).userId;
+    const id = (this.jwtService.decode(token) as { userId: bigint }).userId;
     return this.prisma.users.findUnique({
-      where: { id }
+      where: { id: id }
     });
   }
 
   generateToken(payload: {
-    userId: number;
+    userId: bigint;
     password?: string;
     is_admin?: boolean;
     method?: string;
   }): Token {
-    const payloadObj = JSON.parse(JSON.stringify(payload));
+    function toJson(data) {
+      return JSON.stringify(data, (_, v) =>
+        typeof v === 'bigint' ? `${v}n` : v
+      ).replace(/"(-?\d+)n"/g, (_, a) => a);
+    }
+    const payloadObj = JSON.parse(toJson({ ...payload }));
     const accessToken = this.jwtService.sign(payloadObj, {
       expiresIn: '7d',
       secret: process.env.JWT_SECRET

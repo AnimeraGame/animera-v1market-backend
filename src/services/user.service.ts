@@ -33,7 +33,7 @@ export class UserService {
     });
   }
 
-  async findUserById(id: string, walletAddress: string): Promise<User> {
+  async findUserById(id: number, walletAddress: string): Promise<User> {
     return this.prisma.users.findFirst({
       where: {
         id,

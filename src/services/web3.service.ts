@@ -9,7 +9,7 @@ import abiDecoder from 'abi-decoder';
 import moment from 'moment';
 
 interface CreateTransactionProps {
-  contractId: string;
+  contractId: bigint;
   transactionReceipt: TransactionReceipt;
   transaction: Transaction;
   blockData: BlockTransactionString;

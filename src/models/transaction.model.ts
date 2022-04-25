@@ -19,7 +19,7 @@ export class Transaction extends BaseModel {
   createdAt: Date;
 
   @Field()
-  contractId: string;
+  contractId: bigint;
 
   @Field()
   transactionHash: string;

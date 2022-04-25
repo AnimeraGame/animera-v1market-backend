@@ -14,10 +14,6 @@ export class Nft extends BaseModel {
     Object.assign(this, partial);
   }
 
-  // hidden fields
-  @HideField()
-  id: Number;
-
   @HideField()
   updated_at: Date;
 
@@ -58,11 +54,11 @@ export class Nft extends BaseModel {
 
   // nft_metadata_id alias
   @HideField()
-  nft_metadata_id: Number | null;
+  nft_metadata_id: number | bigint | null;
 
   @Field(() => Number, { nullable: true })
   @Expose()
-  get nftMetadataId(): Number | null {
+  get nftMetadataId(): number | bigint | null {
     return this.nft_metadata_id;
   }
 
@@ -123,6 +119,6 @@ export class Nft extends BaseModel {
     return this.last_sale;
   }
 
-  @Field(() => Estate, { nullable: true })
-  directOffer?: Estate;
+  @Field(() => [Estate], { nullable: true })
+  estates?: Estate[];
 }

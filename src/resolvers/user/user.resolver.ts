@@ -24,7 +24,7 @@ export class UserResolver {
   @UseInterceptors(ClassSerializerInterceptor)
   @Query(() => User, { name: 'user' })
   async user(
-    @Args('id', { nullable: true }) id: string,
+    @Args('id', { nullable: true }) id: number,
     @Args('walletAddress', { nullable: true }) walletAddress: string
   ): Promise<User> {
     const user = await this.userService.findUserById(id, walletAddress);
