@@ -4,6 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { estates, nfts } from '@prisma/client';
+import web3 from 'web3';
 import { NftMetadata } from 'src/models/nft_metadata.model';
 import { PrismaService } from './prisma.service';
 import { Nft } from '../models/nft.model';
@@ -151,10 +152,10 @@ export class EstateService {
       where: {
         status,
         type: EstateType.sale,
-        price: {
-          gt: price.gt ? price.gt : 0,
-          lt: price.lt ? price.lt : 100000000000000
-        }
+        // price: {
+        //   gt: price.gt ? BigInt(web3.utils.toWei(price.gt.toString())) : 0,
+        //   lt: price.lt ? BigInt(web3.utils.toWei(price.lt.toString())) : BigInt(web3.utils.toWei('100000'))
+        // }
       },
       include: {
         nft: {
@@ -251,10 +252,10 @@ export class EstateService {
           equals: wallet,
           mode: 'insensitive'
         },
-        price: {
-          gt: price.gt ? price.gt : 0,
-          lt: price.lt ? price.lt : 100000000000000
-        }
+        // price: {
+        //   gt: price.gt ? price.gt : 0,
+        //   lt: price.lt ? price.lt : 100000000000000
+        // }
       },
       include: {
         nft: {
@@ -336,7 +337,7 @@ export class EstateService {
           token_address: data.token_address,
           seller: data.seller,
           buyer: data.buyer,
-          price: data.price,
+          price: BigInt(data.price),
           seller_signature: data.seller_signature,
           buyer_signature: data.buyer_signature,
           created_at: new Date(Date.now()),
@@ -374,10 +375,22 @@ export class EstateService {
       if (currentEstate.type === EstateType.offer && owner.walletAddress.toLowerCase() !== currentEstate.buyer.toLowerCase()) {
         throw new BadRequestException('Caller is not owner of this offer');
       }
+
+      // @ts-ignore
+      data.price = BigInt(data.price);
+
       const estate = await this.prisma.estates.update({
+      // @ts-ignore
         data,
         where: {
           id: data.id
+        },
+        include: {
+          nft: {
+            include: {
+              nft_metadata: true
+            }
+          }
         }
       });
       return estate;

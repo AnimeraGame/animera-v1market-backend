@@ -25,7 +25,7 @@ input CreateEstateInput {
   buyer_signature: String
   expire_at: DateTime
   nft_id: Int
-  price: Int
+  price: String
   seller: String
   seller_signature: String
   status: Int
@@ -39,6 +39,9 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Estate {
+  buyer: String
+  buyer_signature: String
+
   """Identifies the date and time when the offer closed."""
   closedAt: DateTime
 
@@ -49,9 +52,9 @@ type Estate {
   expireAt: DateTime
   id: BigInt!
   nft: Nft
-  price: Float!
+  price: BigInt!
   seller: String!
-  sellerSignature: String
+  seller_signature: String
   status: EstateStatus!
   tokenAddress: String
   tx: String
@@ -169,8 +172,7 @@ input UpdateEstateInput {
   buyer_signature: String
   expire_at: DateTime
   id: Int!
-  nft_id: Int
-  price: Int
+  price: String
   seller: String
   seller_signature: String
   status: Int

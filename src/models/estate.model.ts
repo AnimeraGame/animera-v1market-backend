@@ -43,17 +43,14 @@ export class Estate extends BaseModel {
   @Field()
   seller: string;
 
-  @HideField()
-  seller_signature: string;
+  @Field({ nullable: true })
+  seller_signature?: string;
 
-  @Field(() => String, { nullable: true })
-  @Expose()
-  get sellerSignature(): string {
-    return this.seller_signature;
-  }
+  @Field({ nullable: true })
+  buyer?: string;
 
-  @HideField()
-  buyer: string;
+  @Field({ nullable: true })
+  buyer_signature?: string;
 
   @Field({ nullable: true })
   tx: string;
@@ -73,8 +70,8 @@ export class Estate extends BaseModel {
   @Field(() => EstateStatus)
   status: EstateStatus;
 
-  @Field(() => Float)
-  price: number;
+  @Field(() => BigInt)
+  price: bigint;
 
   @Field(() => Nft, { nullable: true })
   nft?: Nft | null;

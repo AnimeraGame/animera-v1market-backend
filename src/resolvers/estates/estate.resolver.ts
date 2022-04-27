@@ -101,8 +101,10 @@ export class EsateResolver {
     return new Estates({ estates: offers, _count: _count || 0 });
   }
 
-  @Query(() => Estates, {})
+  @UseGuards(GqlAuthGuard)
+  @Query(() => Estates)
   async findMyOffersBy(
+    @UserEntity() user: User,
     @Args('wallet', { nullable: true }) wallet: string,
     @Args('page', { nullable: true }) page: number | null,
     @Args('onePage', { nullable: true }) onePage: number | null,

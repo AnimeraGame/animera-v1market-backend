@@ -6,10 +6,7 @@ export class UpdateEstateInput {
   id: number;
 
   @Field({ nullable: true })
-  price?: number;
-
-  @Field({ nullable: true })
-  nft_id?: number;
+  price?: string;
 
   @Field({ nullable: true })
   token_address?: string;

@@ -3,7 +3,7 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class CreateEstateInput {
   @Field({ nullable: true })
-  price?: number;
+  price?: string;
 
   @Field({ nullable: true })
   nft_id?: number;

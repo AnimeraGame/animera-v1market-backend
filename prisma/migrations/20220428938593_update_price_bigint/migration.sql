@@ -1,0 +1,2 @@
+ALTER TABLE "estates" DROP COLUMN "price",
+ADD COLUMN     "price" BIGINT NOT NULL;
