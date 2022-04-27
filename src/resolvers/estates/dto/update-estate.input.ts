@@ -5,26 +5,29 @@ export class UpdateEstateInput {
   @Field()
   id: number;
 
-  @Field()
-  chainId: number;
+  @Field({ nullable: true })
+  price?: number;
 
-  @Field()
-  sellerPrice: number;
+  @Field({ nullable: true })
+  nft_id?: number;
 
-  @Field()
-  nftId: number;
+  @Field({ nullable: true })
+  token_address?: string;
 
-  @Field()
-  tokenAddress: string;
+  @Field({ nullable: true })
+  expire_at?: Date;
 
-  @Field()
-  sellerDeadline: Date;
+  @Field({ nullable: true })
+  seller_signature?: string;
 
-  @Field()
-  signature: string;
+  @Field({ nullable: true })
+  buyer_signature?: string;
 
-  @Field()
-  sellerWalletAddress: string;
+  @Field({ nullable: true })
+  seller: string;
+
+  @Field({ nullable: true })
+  buyer: string;
 
   @Field({ nullable: true })
   status?: number;

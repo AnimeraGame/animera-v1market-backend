@@ -5,11 +5,9 @@ import { TestService } from 'src/services/test.service';
 export class TestResolver {
   constructor(private testService: TestService) {}
 
-  @Mutation(() => Boolean)
-  async createFakeAccounts(
-    @Args('amount') amount: number = 20
-  ): Promise<Boolean> {
-    await this.testService.createFakeAccounts(amount);
-    return true;
+  @Mutation(() => BigInt)
+  async createFakeAccounts(): Promise<BigInt> {
+    await this.testService.createFakeAccounts(20);
+    return BigInt(20);
   }
 }

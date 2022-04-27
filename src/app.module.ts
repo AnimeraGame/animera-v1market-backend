@@ -1,6 +1,7 @@
 import { GraphQLModule } from '@nestjs/graphql';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { BigIntResolver } from 'graphql-scalars';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './services/app.service';
 import { AuthModule } from './resolvers/auth/auth.module';
@@ -20,7 +21,10 @@ import { BigIntScalar } from './common/scalars/bigint.scalar';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config]
+    }),
     GraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService) => {
         const graphqlConfig = configService.get<GraphqlConfig>('graphql');
@@ -44,13 +48,19 @@ import { BigIntScalar } from './common/scalars/bigint.scalar';
       },
       inject: [ConfigService]
     }),
+    GraphQLModule.forRoot({
+      typePaths: ['./**/*.graphql'],
+      resolvers: {
+        'BigInt': BigIntResolver
+      }
+    }),
     AuthModule,
     UserModule,
     NftModule,
     EstateModule,
     TransactionModule,
-    Web3Module,
-    // TestModule,
+    // Web3Module,
+    TestModule,
     PrismaModule,
     TerminusModule,
     EventEmitterModule.forRoot({

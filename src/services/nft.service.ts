@@ -88,7 +88,11 @@ export class NftService {
       },
       include: {
         nft_metadata: true,
-        estates: true
+        estates: {
+          where: {
+            status: 0
+          }
+        }
       }
     });
 

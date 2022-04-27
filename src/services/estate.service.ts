@@ -8,7 +8,7 @@ import { NftMetadata } from 'src/models/nft_metadata.model';
 import { PrismaService } from './prisma.service';
 import { Nft } from '../models/nft.model';
 import { User } from '../models/user.model';
-import { Estate, EstateType } from 'src/models/estate.model';
+import { Estate, EstateStatus, EstateType } from 'src/models/estate.model';
 import { CreateEstateInput } from 'src/resolvers/estates/dto/create-estate.input';
 import { UpdateEstateInput } from 'src/resolvers/estates/dto/update-estate.input';
 import { OrderByInput } from 'src/resolvers/estates/dto/order-by.input';
@@ -284,51 +284,64 @@ export class EstateService {
     return { myOffers: res, _count: res.length };
   }
 
-  async createEstate(seller: User, data: CreateEstateInput): Promise<estates> {
-    console.log('data ----', data);
+  async createEstate(user: User, data: CreateEstateInput): Promise<estates> {
     try {
-      if (
-        seller.walletAddress.toLowerCase() !==
-        data.sellerWalletAddress.toLowerCase()
-      ) {
-        throw new BadRequestException('API caller is not offer creator');
-      }
       const nft = await this.prisma.nfts.findFirst({
         where: {
-          id: data.nftId
+          id: data.nft_id
         }
       });
       if (!nft) {
         throw new BadRequestException('There is no NFT with this id');
       }
-      if (
-        nft.owner_wallet_address.toLowerCase() !==
-          seller.walletAddress.toLowerCase() &&
-        data.type == 0
-      ) {
-        throw new BadRequestException('Api caller is not owner of this NFT');
-      }
-      const oldEstate = await this.prisma.estates.findMany({
-        where: {
-          nft_id: data.nftId
+      if (data.type === EstateType.sale) {
+        if (
+          user.walletAddress.toLowerCase() !==
+          data.seller.toLowerCase()
+        ) {
+          throw new BadRequestException('API caller is not sale creator');
         }
-      });
-      if (oldEstate.length > 0) {
-        throw new BadRequestException('This nft is already on marketplace');
+        const oldEstate = await this.prisma.estates.findMany({
+          where: {
+            nft_id: data.nft_id,
+            status: EstateStatus.active
+          }
+        });
+        if (oldEstate.length > 0) {
+          throw new BadRequestException('This nft is already on marketplace');
+        }
+        if (
+          nft.owner_wallet_address.toLowerCase() !== user.walletAddress.toLowerCase()
+        ) {
+          throw new BadRequestException('Api caller is not owner of this NFT');
+        }
+      } else {
+        if (
+          user.walletAddress.toLowerCase() !==
+          data.buyer.toLowerCase()
+        ) {
+          throw new BadRequestException('API caller is not offer creator');
+        }
+        if (
+          nft.owner_wallet_address.toLowerCase() === user.walletAddress.toLowerCase()
+        ) {
+          throw new BadRequestException('Users cannot make offer to their own NFT');
+        }
       }
 
       const estate = await this.prisma.estates.create({
         data: {
-          nft_id: data.nftId,
+          nft_id: data.nft_id,
           type: data.type,
-          token_address: data.tokenAddress,
-          seller: seller.walletAddress,
-          buyer: data.buyerWalletAddress,
-          price: data.sellerPrice,
-          seller_signature: data.signature,
+          token_address: data.token_address,
+          seller: data.seller,
+          buyer: data.buyer,
+          price: data.price,
+          seller_signature: data.seller_signature,
+          buyer_signature: data.buyer_signature,
           created_at: new Date(Date.now()),
           updated_at: new Date(Date.now()),
-          expire_at: new Date(data.sellerDeadline),
+          expire_at: new Date(data.expire_at),
           status: data.status ? data.status : 0
         }
       });
@@ -338,7 +351,7 @@ export class EstateService {
           is_on_marketplace: true
         },
         where: {
-          id: data.nftId
+          id: data.nft_id
         }
       });
 
@@ -350,21 +363,19 @@ export class EstateService {
 
   async updateEstate(owner: User, data: UpdateEstateInput): Promise<estates> {
     try {
-      if (owner.walletAddress !== data.sellerWalletAddress) {
+      const currentEstate = await this.prisma.estates.findUnique({
+        where: { id: data.id }
+      });
+
+      if (currentEstate.type === EstateType.sale  && owner.walletAddress.toLowerCase() !== currentEstate.seller.toLowerCase()) {
         throw new BadRequestException('Caller is not owner of this sale');
       }
+
+      if (currentEstate.type === EstateType.offer && owner.walletAddress.toLowerCase() !== currentEstate.buyer.toLowerCase()) {
+        throw new BadRequestException('Caller is not owner of this offer');
+      }
       const estate = await this.prisma.estates.update({
-        data: {
-          nft_id: data.nftId,
-          token_address: data.tokenAddress,
-          seller: data.sellerWalletAddress,
-          price: data.sellerPrice,
-          seller_signature: data.signature,
-          created_at: new Date(Date.now()),
-          updated_at: new Date(Date.now()),
-          expire_at: new Date(data.sellerDeadline),
-          status: data.status ? data.status : 0
-        },
+        data,
         where: {
           id: data.id
         }

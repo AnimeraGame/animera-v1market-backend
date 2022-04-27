@@ -7,6 +7,7 @@ import { BlockTransactionString } from 'web3-eth';
 import EthCrypto from 'eth-crypto';
 import abiDecoder from 'abi-decoder';
 import moment from 'moment';
+import { EstateStatus } from 'src/models/estate.model';
 
 interface CreateTransactionProps {
   contractId: bigint;
@@ -75,22 +76,22 @@ export class Web3Service implements OnModuleInit {
         const dataToSave = {
           owner_wallet_address: '0x' + event.to.substring(26),
           token_id: tokenId,
-          nft_metadata_id: null,
+          nft_metadata_id: 1,
           created_at: new Date(),
           updated_at: new Date()
         };
-        try {
-          const metadata = await this.prisma.nft_metadata.findFirst({
-            where: {
-              token_id: tokenId
-            }
-          });
-          if (metadata) {
-            dataToSave.nft_metadata_id = metadata.id;
-          }
-        } catch (error: any) {
-          Logger.log(`error on fetch nft_metadata- ${JSON.stringify(error)}`);
-        }
+        // try {
+        //   const metadata = await this.prisma.nft_metadata.findFirst({
+        //     where: {
+        //       token_id: tokenId
+        //     }
+        //   });
+        //   if (metadata) {
+        //     dataToSave.nft_metadata_id = metadata.id;
+        //   }
+        // } catch (error: any) {
+        //   Logger.log(`error on fetch nft_metadata- ${JSON.stringify(error)}`);
+        // }
         await this.prisma.nfts.upsert({
           where: {
             token_id: tokenId
@@ -100,6 +101,34 @@ export class Web3Service implements OnModuleInit {
         });
       }
     });
+  }
+
+  async updateSale(saleId, seller, buyer, nftAddress, nftId) {
+    try {
+      const sale = await this.prisma.estates.findUnique({
+        where: {
+          id: saleId
+        },
+        include: {
+          nft: true
+        }
+      });
+
+      if (sale.seller.toLowerCase() !== seller.toLowerCase() || buyer.toLowerCase() !== sale.buyer.toLowerCase() || nftId !== sale.nft.token_id) {
+        console.log('-------- hacked ----------', saleId);
+      } else {
+        await this.prisma.estates.update({
+          where: {
+            id: saleId
+          },
+          data: {
+            status: EstateStatus.finished
+          }
+        })
+      }
+    } catch(error) {
+
+    }
   }
 
   // async genereateECDSASignature(reward: number, walletAddress: string, userId: number) {
@@ -233,7 +262,6 @@ export class Web3Service implements OnModuleInit {
             });
 
           const currentBlockNumber = await web3.eth.getBlockNumber();
-          console.log('current block number', currentBlockNumber);
 
           let blockNumber =
             lastBlockNumber > initialBlockNumber
@@ -252,7 +280,11 @@ export class Web3Service implements OnModuleInit {
               .then(events =>
                 events.map(event => {
                   if (name === 'Market') {
-                    console.log('market event', event);
+                    if (event.event === 'SellExecuted') {
+                      const saleDetails = event.returnValues;
+                      console.log('called sale finish', saleDetails);
+                      this.updateSale(saleDetails.saleId, saleDetails.seller, saleDetails.buyer, saleDetails.nftAddress, saleDetails.nftId)
+                    }
                   }
                   return event.transactionHash;
                 })
@@ -308,11 +340,12 @@ export class Web3Service implements OnModuleInit {
 
               if (name === 'Market') {
                 const sellEvents = logs.map(log => {
+                  console.log('log topic', log);
                   if (
                     log.topics[0] ===
-                    '0xc016fc6eec116472bfe0549668f2c0a088bd1924bdac4b36f426b5b8085e132f'
+                    '0x3f02563ae69920357c8f6daff44fe0bc448cf7324d13df32da1c7dcd1560a2dc'
                   ) {
-                    console.log('sell event', log);
+                    console.log('sell event', transaction);
                   }
                 });
               }

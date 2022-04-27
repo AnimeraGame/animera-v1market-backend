@@ -6,6 +6,7 @@
   - The primary key for the `contracts` table will be changed. If it partially fails, the table could be left without primary key constraint.
   - The `id` column on the `contracts` table would be dropped and recreated. This will lead to data loss if there is data in the column.
   - The primary key for the `estates` table will be changed. If it partially fails, the table could be left without primary key constraint.
+  - You are about to drop the column `token_id` on the `estates` table. All the data in the column will be lost.
   - The `id` column on the `estates` table would be dropped and recreated. This will lead to data loss if there is data in the column.
   - The `nft_id` column on the `estates` table would be dropped and recreated. This will lead to data loss if there is data in the column.
   - The primary key for the `nft_metadata` table will be changed. If it partially fails, the table could be left without primary key constraint.
@@ -55,6 +56,7 @@ ADD CONSTRAINT "contracts_pkey" PRIMARY KEY ("id");
 
 -- AlterTable
 ALTER TABLE "estates" DROP CONSTRAINT "estates_pkey",
+DROP COLUMN "token_id",
 DROP COLUMN "id",
 ADD COLUMN     "id" BIGSERIAL NOT NULL,
 DROP COLUMN "nft_id",

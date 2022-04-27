@@ -2,32 +2,32 @@ import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateEstateInput {
-  @Field()
-  chainId: number;
-
-  @Field()
-  sellerPrice: number;
-
-  @Field()
-  type: number;
-
-  @Field()
-  nftId: number;
-
-  @Field()
-  tokenAddress: string;
-
-  @Field()
-  sellerDeadline: Date;
-
-  @Field()
-  signature: string;
-
-  @Field()
-  sellerWalletAddress: string;
+  @Field({ nullable: true })
+  price?: number;
 
   @Field({ nullable: true })
-  buyerWalletAddress?: string;
+  nft_id?: number;
+
+  @Field({ nullable: true })
+  type?: number;
+
+  @Field({ nullable: true })
+  token_address?: string;
+
+  @Field({ nullable: true })
+  expire_at?: Date;
+
+  @Field({ nullable: true })
+  seller_signature?: string;
+
+  @Field({ nullable: true })
+  buyer_signature?: string;
+
+  @Field({ nullable: true })
+  seller: string;
+
+  @Field({ nullable: true })
+  buyer: string;
 
   @Field({ nullable: true })
   status?: number;
