@@ -79,8 +79,10 @@ export class EsateResolver {
     return new Estates({ estates, _count: _count || 0 });
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => Estates, {})
   async findOffersBy(
+    @UserEntity() user: User,
     @Args('wallet', { nullable: true }) wallet: string,
     @Args('page', { nullable: true }) page: number | null,
     @Args('onePage', { nullable: true }) onePage: number | null,
@@ -89,8 +91,9 @@ export class EsateResolver {
     @Args('status', { nullable: true }) status: number | null,
     @Args('searchText', { nullable: true }) searchText: string | null
   ): Promise<Estates> {
+    console.log('wallet address:', user.walletAddress);
     const { offers, _count } = await this.estateService.findOffersBy(
-      wallet,
+      user.walletAddress,
       onePage,
       page,
       orderBy,
@@ -114,7 +117,7 @@ export class EsateResolver {
     @Args('searchText', { nullable: true }) searchText: string | null
   ): Promise<Estates> {
     const { myOffers, _count } = await this.estateService.findMyOffersBy(
-      wallet,
+      user.walletAddress,
       onePage,
       page,
       orderBy,

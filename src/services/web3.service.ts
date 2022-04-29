@@ -114,7 +114,11 @@ export class Web3Service implements OnModuleInit {
         }
       });
 
-      if (sale.seller.toLowerCase() !== seller.toLowerCase() || buyer.toLowerCase() !== sale.buyer.toLowerCase() || nftId !== sale.nft.token_id) {
+      if (
+        sale.seller.toLowerCase() !== seller.toLowerCase() ||
+        buyer.toLowerCase() !== sale.buyer.toLowerCase() ||
+        nftId !== sale.nft.token_id
+      ) {
         console.log('-------- hacked ----------', saleId);
       } else {
         await this.prisma.estates.update({
@@ -124,10 +128,42 @@ export class Web3Service implements OnModuleInit {
           data: {
             status: EstateStatus.finished
           }
-        })
+        });
       }
-    } catch(error) {
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  async updateOffer(offerId, seller, buyer, nftAddress, nftId) {
+    try {
+      const offer = await this.prisma.estates.findUnique({
+        where: {
+          id: offerId
+        },
+        include: {
+          nft: true
+        }
+      });
+
+      if (
+        offer.seller.toLowerCase() !== seller.toLowerCase() ||
+        buyer.toLowerCase() !== offer.buyer.toLowerCase() ||
+        nftId !== offer.nft.token_id
+      ) {
+        console.log('-------- hacked ----------', offerId);
+      } else {
+        await this.prisma.estates.update({
+          where: {
+            id: offerId
+          },
+          data: {
+            status: EstateStatus.finished
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -283,7 +319,23 @@ export class Web3Service implements OnModuleInit {
                     if (event.event === 'SellExecuted') {
                       const saleDetails = event.returnValues;
                       console.log('called sale finish', saleDetails);
-                      this.updateSale(saleDetails.saleId, saleDetails.seller, saleDetails.buyer, saleDetails.nftAddress, saleDetails.nftId)
+                      this.updateSale(
+                        saleDetails.saleId,
+                        saleDetails.seller,
+                        saleDetails.buyer,
+                        saleDetails.nftAddress,
+                        saleDetails.nftId
+                      );
+                    } else if (event.event === 'OfferExecuted') {
+                      const offerDetails = event.returnValues;
+                      console.log('called offer finish', offerDetails);
+                      this.updateOffer(
+                        offerDetails.saleId,
+                        offerDetails.seller,
+                        offerDetails.buyer,
+                        offerDetails.nftAddress,
+                        offerDetails.nftId
+                      );
                     }
                   }
                   return event.transactionHash;

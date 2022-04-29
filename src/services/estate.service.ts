@@ -151,7 +151,7 @@ export class EstateService {
     const estateList = await this.prisma.estates.findMany({
       where: {
         status,
-        type: EstateType.sale,
+        type: EstateType.sale
         // price: {
         //   gt: price.gt ? BigInt(web3.utils.toWei(price.gt.toString())) : 0,
         //   lt: price.lt ? BigInt(web3.utils.toWei(price.lt.toString())) : BigInt(web3.utils.toWei('100000'))
@@ -194,6 +194,7 @@ export class EstateService {
     status = 0,
     searchText = null
   ): Promise<{ offers: Estate[]; _count: number }> {
+    console.log('wallet address ------', wallet);
     const offerList = await this.prisma.estates.findMany({
       where: {
         status,
@@ -201,11 +202,11 @@ export class EstateService {
         seller: {
           equals: wallet,
           mode: 'insensitive'
-        },
-        price: {
-          gt: price.gt ? price.gt : 0,
-          lt: price.lt ? price.lt : 100000000000000
         }
+        // price: {
+        // gt: price.gt ? price.gt : 0
+        // lt: price.lt ? price.lt : 100000000000000
+        // }
       },
       include: {
         nft: {
@@ -251,7 +252,7 @@ export class EstateService {
         buyer: {
           equals: wallet,
           mode: 'insensitive'
-        },
+        }
         // price: {
         //   gt: price.gt ? price.gt : 0,
         //   lt: price.lt ? price.lt : 100000000000000
@@ -296,10 +297,7 @@ export class EstateService {
         throw new BadRequestException('There is no NFT with this id');
       }
       if (data.type === EstateType.sale) {
-        if (
-          user.walletAddress.toLowerCase() !==
-          data.seller.toLowerCase()
-        ) {
+        if (user.walletAddress.toLowerCase() !== data.seller.toLowerCase()) {
           throw new BadRequestException('API caller is not sale creator');
         }
         const oldEstate = await this.prisma.estates.findMany({
@@ -312,21 +310,22 @@ export class EstateService {
           throw new BadRequestException('This nft is already on marketplace');
         }
         if (
-          nft.owner_wallet_address.toLowerCase() !== user.walletAddress.toLowerCase()
+          nft.owner_wallet_address.toLowerCase() !==
+          user.walletAddress.toLowerCase()
         ) {
           throw new BadRequestException('Api caller is not owner of this NFT');
         }
       } else {
-        if (
-          user.walletAddress.toLowerCase() !==
-          data.buyer.toLowerCase()
-        ) {
+        if (user.walletAddress.toLowerCase() !== data.buyer.toLowerCase()) {
           throw new BadRequestException('API caller is not offer creator');
         }
         if (
-          nft.owner_wallet_address.toLowerCase() === user.walletAddress.toLowerCase()
+          nft.owner_wallet_address.toLowerCase() ===
+          user.walletAddress.toLowerCase()
         ) {
-          throw new BadRequestException('Users cannot make offer to their own NFT');
+          throw new BadRequestException(
+            'Users cannot make offer to their own NFT'
+          );
         }
       }
 
@@ -368,11 +367,17 @@ export class EstateService {
         where: { id: data.id }
       });
 
-      if (currentEstate.type === EstateType.sale  && owner.walletAddress.toLowerCase() !== currentEstate.seller.toLowerCase()) {
+      if (
+        currentEstate.type === EstateType.sale &&
+        owner.walletAddress.toLowerCase() !== currentEstate.seller.toLowerCase()
+      ) {
         throw new BadRequestException('Caller is not owner of this sale');
       }
 
-      if (currentEstate.type === EstateType.offer && owner.walletAddress.toLowerCase() !== currentEstate.buyer.toLowerCase()) {
+      if (
+        currentEstate.type === EstateType.offer &&
+        owner.walletAddress.toLowerCase() !== currentEstate.buyer.toLowerCase()
+      ) {
         throw new BadRequestException('Caller is not owner of this offer');
       }
 
@@ -380,7 +385,7 @@ export class EstateService {
       data.price = BigInt(data.price);
 
       const estate = await this.prisma.estates.update({
-      // @ts-ignore
+        // @ts-ignore
         data,
         where: {
           id: data.id
