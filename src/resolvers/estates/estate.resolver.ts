@@ -91,7 +91,6 @@ export class EsateResolver {
     @Args('status', { nullable: true }) status: number | null,
     @Args('searchText', { nullable: true }) searchText: string | null
   ): Promise<Estates> {
-    console.log('wallet address:', user.walletAddress);
     const { offers, _count } = await this.estateService.findOffersBy(
       user.walletAddress,
       onePage,
@@ -144,5 +143,14 @@ export class EsateResolver {
     @Args('data') data: UpdateEstateInput
   ) {
     return new Estate(await this.estateService.updateEstate(user, data));
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Estate)
+  async declineEstate(
+    @UserEntity() user: User,
+    @Args('data') data: UpdateEstateInput
+  ) {
+    return new Estate(await this.estateService.declineEstate(user, data));
   }
 }

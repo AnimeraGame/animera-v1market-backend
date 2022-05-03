@@ -94,6 +94,7 @@ type Mutation {
   authByWallet(data: AuthByWalletInput!): Auth!
   createEstate(data: CreateEstateInput!): Estate!
   createFakeAccounts: BigInt!
+  declineEstate(data: UpdateEstateInput!): Estate!
   refreshToken(token: String!): Token!
   updateEstate(data: UpdateEstateInput!): Estate!
   updateNftMetadata(data: String, meta_id: Int): NftMetadata!

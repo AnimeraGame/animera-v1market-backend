@@ -317,6 +317,7 @@ export class Web3Service implements OnModuleInit {
                 events.map(event => {
                   if (name === 'Market') {
                     if (event.event === 'SellExecuted') {
+                      console.log('sell excuted -----');
                       const saleDetails = event.returnValues;
                       console.log('called sale finish', saleDetails);
                       this.updateSale(
@@ -327,6 +328,7 @@ export class Web3Service implements OnModuleInit {
                         saleDetails.nftId
                       );
                     } else if (event.event === 'OfferExecuted') {
+                      console.log('offer excuted -----');
                       const offerDetails = event.returnValues;
                       console.log('called offer finish', offerDetails);
                       this.updateOffer(

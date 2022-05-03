@@ -194,7 +194,6 @@ export class EstateService {
     status = 0,
     searchText = null
   ): Promise<{ offers: Estate[]; _count: number }> {
-    console.log('wallet address ------', wallet);
     const offerList = await this.prisma.estates.findMany({
       where: {
         status,
@@ -381,6 +380,31 @@ export class EstateService {
         throw new BadRequestException('Caller is not owner of this offer');
       }
 
+      // @ts-ignore
+      data.price = BigInt(data.price);
+
+      const estate = await this.prisma.estates.update({
+        // @ts-ignore
+        data,
+        where: {
+          id: data.id
+        },
+        include: {
+          nft: {
+            include: {
+              nft_metadata: true
+            }
+          }
+        }
+      });
+      return estate;
+    } catch (e) {
+      throw new BadRequestException(e.message);
+    }
+  }
+
+  async declineEstate(owner: User, data: UpdateEstateInput): Promise<estates> {
+    try {
       // @ts-ignore
       data.price = BigInt(data.price);
 
