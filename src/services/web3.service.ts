@@ -394,12 +394,42 @@ export class Web3Service implements OnModuleInit {
 
               if (name === 'Market') {
                 const sellEvents = logs.map(log => {
-                  console.log('log topic', log);
+                  console.log('log topic in Market :', log);
                   if (
                     log.topics[0] ===
                     '0x3f02563ae69920357c8f6daff44fe0bc448cf7324d13df32da1c7dcd1560a2dc'
                   ) {
-                    console.log('sell event', transaction);
+                    const saleId = parseInt(log.topics[1]);
+                    console.log('sale Id -', saleId);
+                    const logSaleData = web3.eth.abi.decodeParameters(
+                      ['address', 'uint256', 'uint256'],
+                      log.data
+                    );
+                    console.log('log sale data ----', logSaleData);
+                    this.updateSale(
+                      saleId,
+                      log.topics[2],
+                      log.topics[3],
+                      logSaleData[0],
+                      logSaleData[1]
+                    );
+                  }
+                  if (
+                    log.topics[0] ===
+                    '0x572ee57b09fbd7488338090585e33096a5e7b90dc5438747917558ab5cd82d6b'
+                  ) {
+                    const offerId = parseInt(log.topics[1]);
+                    const logOfferData = web3.eth.abi.decodeParameters(
+                      ['address', 'address', 'uint256', 'uint256', 'uint256'],
+                      log.data
+                    );
+                    this.updateOffer(
+                      offerId,
+                      log.topics[2],
+                      log.topics[3],
+                      logOfferData[0],
+                      logOfferData[2]
+                    );
                   }
                 });
               }

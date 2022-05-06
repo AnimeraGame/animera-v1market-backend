@@ -314,7 +314,7 @@ export class EstateService {
         ) {
           throw new BadRequestException('Api caller is not owner of this NFT');
         }
-      } else {
+      } else if (data.type === EstateType.offer) {
         if (user.walletAddress.toLowerCase() !== data.buyer.toLowerCase()) {
           throw new BadRequestException('API caller is not offer creator');
         }
