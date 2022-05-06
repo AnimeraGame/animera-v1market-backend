@@ -3,5 +3,6 @@ RUN apt update && apt install git python3 build-essential libudev-dev libusb-1.0
 WORKDIR /usr/src/app/
 COPY . .
 RUN npm install
+RUN npm run build
 EXPOSE 4444
 CMD ["npm","run","start"]
