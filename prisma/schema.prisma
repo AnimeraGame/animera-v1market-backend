@@ -130,7 +130,7 @@ model estates {
   nft_id           BigInt?
   type             Int
   token_address    String
-  price            Decimal   @db.Decimal()
+  price            String
   seller           String
   buyer            String?
   seller_signature String?

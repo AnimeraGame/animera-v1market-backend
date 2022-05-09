@@ -335,7 +335,7 @@ export class EstateService {
           token_address: data.token_address,
           seller: data.seller,
           buyer: data.buyer,
-          price: BigInt(data.price),
+          price: data.price,
           seller_signature: data.seller_signature,
           buyer_signature: data.buyer_signature,
           created_at: new Date(Date.now()),
@@ -380,9 +380,6 @@ export class EstateService {
         throw new BadRequestException('Caller is not owner of this offer');
       }
 
-      // @ts-ignore
-      data.price = BigInt(data.price);
-
       const estate = await this.prisma.estates.update({
         // @ts-ignore
         data,
@@ -405,9 +402,6 @@ export class EstateService {
 
   async declineEstate(owner: User, data: UpdateEstateInput): Promise<estates> {
     try {
-      // @ts-ignore
-      data.price = BigInt(data.price);
-
       const estate = await this.prisma.estates.update({
         // @ts-ignore
         data,

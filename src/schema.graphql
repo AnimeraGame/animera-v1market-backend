@@ -52,7 +52,7 @@ type Estate {
   expireAt: DateTime
   id: BigInt!
   nft: Nft
-  price: BigInt!
+  price: String!
   seller: String!
   seller_signature: String
   status: EstateStatus!

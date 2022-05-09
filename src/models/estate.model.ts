@@ -70,8 +70,8 @@ export class Estate extends BaseModel {
   @Field(() => EstateStatus)
   status: EstateStatus;
 
-  @Field(() => BigInt)
-  price: bigint;
+  @Field()
+  price: string;
 
   @Field(() => Nft, { nullable: true })
   nft?: Nft | null;
