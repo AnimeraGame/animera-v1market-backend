@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { nonceGenerator } from 'src/utils/nonceGenerator';
 import Web3 from 'web3';
 import { PrismaService } from './prisma.service';
