@@ -28,4 +28,10 @@ export class UpdateEstateInput {
 
   @Field({ nullable: true })
   status?: number;
+
+  @Field({ nullable: true })
+  nft_id?: number;
+
+  @Field({ nullable: true })
+  type?: number;
 }

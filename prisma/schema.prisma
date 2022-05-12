@@ -108,7 +108,7 @@ model nfts {
   updated_at           DateTime      @db.Timestamp(6)
   nft_metadata         nft_metadata? @relation(fields: [nft_metadata_id], references: [id])
   owner_wallet_address String?       @db.VarChar(50)
-  token_id             String        @unique
+  token_id             Int           @unique
   is_on_marketplace    Boolean       @default(false)
   last_sale            DateTime?     @db.Timestamp(6)
   estates              estates[]
@@ -119,7 +119,7 @@ model nfts {
 model nft_metadata {
   id         BigInt   @id @default(autoincrement())
   metadata   Json?
-  token_id   String   @unique
+  token_id   Int      @unique
   created_at DateTime @db.Timestamp(6)
   updated_at DateTime @db.Timestamp(6)
   nfts       nfts[]

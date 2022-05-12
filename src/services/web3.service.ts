@@ -20,7 +20,7 @@ interface CreateTransactionProps {
 interface UpdateNFTByEventProps {
   from: string;
   to: string;
-  tokenId: string;
+  tokenId: number;
 }
 
 @Injectable()
@@ -72,7 +72,7 @@ export class Web3Service implements OnModuleInit {
   async updateNFTByEvent(events: Array<UpdateNFTByEventProps>) {
     events.map(async event => {
       if (event !== null && event !== undefined) {
-        const tokenId = Number(event.tokenId).toString();
+        const tokenId = event.tokenId;
         const dataToSave = {
           owner_wallet_address: '0x' + event.to.substring(26),
           token_id: tokenId,
@@ -280,7 +280,7 @@ export class Web3Service implements OnModuleInit {
                     return {
                       from: log.topics[1],
                       to: log.topics[2],
-                      tokenId: log.topics[3]
+                      tokenId: Number(log.topics[3])
                     };
                   }
                 });
@@ -382,7 +382,7 @@ export class Web3Service implements OnModuleInit {
                     return {
                       from: log.topics[1],
                       to: log.topics[2],
-                      tokenId: log.topics[3]
+                      tokenId: Number(log.topics[3])
                     };
                   }
                 });

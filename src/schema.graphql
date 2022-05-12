@@ -114,7 +114,7 @@ type Nft {
   saleInfo: JSON
   show: Boolean
   status: Int
-  tokenId: String
+  tokenId: Int
 
   """Identifies the date and time when the object was last updated."""
   updatedAt: DateTime!
@@ -173,11 +173,13 @@ input UpdateEstateInput {
   buyer_signature: String
   expire_at: DateTime
   id: Int!
+  nft_id: Int
   price: String
   seller: String
   seller_signature: String
   status: Int
   token_address: String
+  type: Int
 }
 
 type User {

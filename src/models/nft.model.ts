@@ -89,11 +89,11 @@ export class Nft extends BaseModel {
 
   // organization_id alias
   @HideField()
-  token_id: string;
+  token_id: number;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => Number, { nullable: true })
   @Expose()
-  get tokenId(): string {
+  get tokenId(): number {
     return this.token_id;
   }
 

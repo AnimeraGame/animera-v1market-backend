@@ -58,7 +58,7 @@ export class NftService {
     return total;
   }
 
-  async getNftOwner(nft_id: string): Promise<User | null> {
+  async getNftOwner(nft_id: number): Promise<User | null> {
     const nft = await this.prisma.nfts.findFirst({
       where: { token_id: nft_id }
     });
@@ -86,6 +86,9 @@ export class NftService {
           mode: 'insensitive'
         }
       },
+      orderBy: {
+        token_id: 'asc'
+      },
       include: {
         nft_metadata: true,
         estates: {
@@ -98,7 +101,9 @@ export class NftService {
 
     const nfts = [];
     for (let i = 0; i < nftsObjs.length; i++) {
-      const estates = nftsObjs[i].estates.map(estate => { return new Estate(estate)});
+      const estates = nftsObjs[i].estates.map(estate => {
+        return new Estate(estate);
+      });
       const nft = new Nft({ ...nftsObjs[i], estates: estates });
       nfts.push(nft);
     }
@@ -166,23 +171,5 @@ export class NftService {
     } catch (e) {
       throw new BadRequestException(e.message);
     }
-  }
-
-  async findOwner({ id }: Partial<nfts>): Promise<User | null> {
-    const nft = await this.prisma.nfts.findFirst({
-      where: { token_id: id.toString() }
-    });
-    if (!nft) return null;
-
-    return this.prisma.users
-      .findFirst({
-        where: {
-          walletAddress: {
-            equals: nft.owner_wallet_address,
-            mode: 'insensitive'
-          }
-        }
-      })
-      .then(user => (user ? new User(user) : null));
   }
 }
