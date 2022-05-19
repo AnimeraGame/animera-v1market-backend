@@ -832,20 +832,272 @@ const contractsData: Prisma.contractsCreateInput[] = [
   }
 ];
 
+const metaDatas: Prisma.nft_metadataCreateInput[] = [
+  {
+    id: 1,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 1,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 2,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 2,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 3,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 3,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 4,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 4,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 5,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 5,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 6,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 6,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 7,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 7,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 8,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 8,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 9,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 9,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 10,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 10,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  },
+  {
+    id: 11,
+    metadata: [
+      {
+        id: '115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        name: 'Parcel -102,-94',
+        image:
+          'https://api.decentraland.org/v2/parcels/-102/-94/map.png?size=24&width=1024&height=1024',
+        attributes: [
+          { value: -102, trait_type: 'X', display_type: 'number' },
+          { value: -94, trait_type: 'Y', display_type: 'number' }
+        ],
+        description: '',
+        external_url:
+          'https://market.decentraland.org/contracts/0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d/tokens/115792089237316195423570985008687907818901465606625779229656748657304540282786',
+        background_color: '000000'
+      }
+    ],
+    token_id: 11,
+    created_at: new Date(Date.now()),
+    updated_at: new Date(Date.now())
+  }
+];
+
 async function main() {
   console.log(`Start seeding ...`);
-  for (const block of blockchainData) {
-    const blockchains = await prisma.blockchains.create({
-      data: block
-    });
-    console.log(`Created blockchains with id: ${block.id}`);
-  }
+  // for (const block of blockchainData) {
+  //   const blockchains = await prisma.blockchains.create({
+  //     data: block
+  //   });
+  //   console.log(`Created blockchains with id: ${block.id}`);
+  // }
 
-  for (const contract of contractsData) {
-    const contracts = await prisma.contracts.create({
-      data: contract
+  // for (const contract of contractsData) {
+  //   const contracts = await prisma.contracts.create({
+  //     data: contract
+  //   });
+  //   console.log(`Created contracts with id: ${contract.id}`);
+  // }
+
+  for (const metaData of metaDatas) {
+    const nft_metaData = await prisma.nft_metadata.create({
+      data: metaData
     });
-    console.log(`Created contracts with id: ${contract.id}`);
+    console.log(`Created nft_metaData with id: ${metaData.id}`);
   }
 
   console.log(`Seeding finished.`);
