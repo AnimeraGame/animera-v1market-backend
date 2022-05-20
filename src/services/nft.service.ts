@@ -79,6 +79,7 @@ export class NftService {
   async getNftListByWallet(
     wallet: string
   ): Promise<{ nfts: Nft[]; nftsCount: number }> | null {
+    console.log('here');
     const nftsObjs = await this.prisma.nfts.findMany({
       where: {
         owner_wallet_address: {
