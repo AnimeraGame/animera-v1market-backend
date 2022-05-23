@@ -312,7 +312,7 @@ const contractsData: Prisma.contractsCreateInput[] = [
     updatedAt: new Date(Date.now()),
     listenEvents: true,
     initialBlockNumber: 25757808,
-    lastBlockNumber: 26186808,
+    lastBlockNumber: 25756808,
     blockchain: { connect: { id: 1 } }
   },
   {
@@ -536,7 +536,7 @@ const contractsData: Prisma.contractsCreateInput[] = [
     updatedAt: new Date(Date.now()),
     listenEvents: true,
     initialBlockNumber: 25757791,
-    lastBlockNumber: 26186791,
+    lastBlockNumber: 25756791,
     blockchain: { connect: { id: 1 } }
   },
   {
@@ -831,7 +831,7 @@ const contractsData: Prisma.contractsCreateInput[] = [
     updatedAt: new Date(Date.now()),
     listenEvents: true,
     initialBlockNumber: 25758388,
-    lastBlockNumber: 25758388,
+    lastBlockNumber: 25820825,
     blockchain: { connect: { id: 1 } }
   }
 ];
