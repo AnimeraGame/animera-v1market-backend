@@ -7,8 +7,10 @@ const blockchainData: Prisma.blockchainsCreateInput[] = [
   {
     name: 'MumbaiTestnet',
     status: 1,
-    rpcProvider: 'https://rpc-mumbai.maticvigil.com',
-    wsProvider: 'wss://rpc-mumbai.matic.today',
+    rpcProvider:
+      'https://polygon-mumbai.g.alchemy.com/v2/3uqqnyNH2oYhg-O61RJCZYDpjSVDmR_T',
+    wsProvider:
+      'wss://polygon-mumbai.g.alchemy.com/v2/3uqqnyNH2oYhg-O61RJCZYDpjSVDmR_T',
     currency: 'MATIC',
     createdAt: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
