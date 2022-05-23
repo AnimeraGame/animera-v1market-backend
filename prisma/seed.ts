@@ -19,8 +19,10 @@ const blockchainData: Prisma.blockchainsCreateInput[] = [
   {
     name: 'Polygon',
     status: 1,
-    rpcProvider: 'https://rpc-mainnet.matic.network',
-    wsProvider: 'wss://rpc-mainnet.matic.network',
+    rpcProvider:
+      'https://polygon-mainnet.g.alchemy.com/v2/zqczgKZ-O5tlyY6DVFAb2EwuxrVSFPWk',
+    wsProvider:
+      'wss://polygon-mainnet.g.alchemy.com/v2/zqczgKZ-O5tlyY6DVFAb2EwuxrVSFPWk',
     currency: 'MATIC',
     createdAt: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
