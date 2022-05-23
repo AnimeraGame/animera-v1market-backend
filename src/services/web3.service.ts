@@ -211,6 +211,7 @@ export class Web3Service implements OnModuleInit {
   // }
 
   async onModuleInit() {
+    console.log('start...');
     const contracts = await this.prisma.contracts.findMany({
       include: {
         blockchain: true
