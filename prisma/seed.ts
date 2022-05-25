@@ -8,9 +8,9 @@ const blockchainData: Prisma.blockchainsCreateInput[] = [
     name: 'MumbaiTestnet',
     status: 1,
     rpcProvider:
-      'https://polygon-mumbai.g.alchemy.com/v2/3uqqnyNH2oYhg-O61RJCZYDpjSVDmR_T',
+      'https://speedy-nodes-nyc.moralis.io/919ddf95d5bfe65d8882e20c/polygon/mumbai',
     wsProvider:
-      'wss://polygon-mumbai.g.alchemy.com/v2/3uqqnyNH2oYhg-O61RJCZYDpjSVDmR_T',
+      'wss://speedy-nodes-nyc.moralis.io/919ddf95d5bfe65d8882e20c/polygon/mumbai/ws',
     currency: 'MATIC',
     createdAt: new Date(Date.now()),
     updatedAt: new Date(Date.now()),
