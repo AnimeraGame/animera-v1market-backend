@@ -247,6 +247,8 @@ export class Web3Service implements OnModuleInit {
           const web3 = new Web3(new Web3.providers.HttpProvider(rpcProvider));
           const contract = new web3.eth.Contract(abi as any, address);
 
+          console.log('contract all events ----', contract.events);
+
           // All events handler
           contract.events
             .allEvents()
