@@ -2822,19 +2822,19 @@ const metaDatas: Prisma.nft_metadataCreateInput[] = [
 async function main() {
   console.log(`Start seeding ...`);
 
-  // for (const block of blockchainData) {
-  //   const blockchains = await prisma.blockchains.create({
-  //     data: block
-  //   });
-  //   console.log(`Created blockchains with id: ${block.id}`);
-  // }
+  for (const block of blockchainData) {
+    const blockchains = await prisma.blockchains.create({
+      data: block
+    });
+    console.log(`Created blockchains with id: ${block.id}`);
+  }
 
-  // for (const contract of contractsData) {
-  //   const contracts = await prisma.contracts.create({
-  //     data: contract
-  //   });
-  //   console.log(`Created contracts with id: ${contract.id}`);
-  // }
+  for (const contract of contractsData) {
+    const contracts = await prisma.contracts.create({
+      data: contract
+    });
+    console.log(`Created contracts with id: ${contract.id}`);
+  }
 
   for (const metaData of metaDatas) {
     const nft_metaData = await prisma.nft_metadata.create({
