@@ -18,42 +18,22 @@ import { TestModule } from './resolvers/test/test.module';
 import { Web3Module } from './modules/web3.module';
 import { EstateModule } from './resolvers/estates/estates.module';
 import { BigIntScalar } from './common/scalars/bigint.scalar';
-
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { GqlConfigService } from './gql-config.service';
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [config]
+    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      useClass: GqlConfigService
     }),
-    GraphQLModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => {
-        const graphqlConfig = configService.get<GraphqlConfig>('graphql');
-        return {
-          installSubscriptionHandlers: true,
-          emitTypenameField: true,
-          buildSchemaOptions: {
-            numberScalarMode: 'integer'
-          },
-          sortSchema: graphqlConfig.sortSchema,
-          autoSchemaFile:
-            graphqlConfig.schemaDestination || './src/schema.graphql',
-          debug: graphqlConfig.debug,
-          formatError: error => {
-            Logger.warn(error);
-            return error;
-          },
-          playground: graphqlConfig.playgroundEnabled,
-          context: ({ req }) => ({ req })
-        };
-      },
-      inject: [ConfigService]
-    }),
-    GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
-      resolvers: {
-        'BigInt': BigIntResolver
-      }
-    }),
+    // GraphQLModule.forRoot({
+    //   typePaths: ['./**/*.graphql'],
+    //   resolvers: {
+    //     'BigInt': BigIntResolver
+    //   }
+    // }),
     AuthModule,
     UserModule,
     NftModule,
@@ -84,7 +64,7 @@ import { BigIntScalar } from './common/scalars/bigint.scalar';
   providers: [
     AppService,
     AppResolver,
-    BigIntScalar,
+    BigIntScalar
   ],
   exports: []
 })
