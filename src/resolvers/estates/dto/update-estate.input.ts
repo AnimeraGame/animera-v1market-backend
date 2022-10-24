@@ -15,12 +15,6 @@ export class UpdateEstateInput {
   expire_at?: Date;
 
   @Field({ nullable: true })
-  seller_signature?: string;
-
-  @Field({ nullable: true })
-  buyer_signature?: string;
-
-  @Field({ nullable: true })
   seller: string;
 
   @Field({ nullable: true })

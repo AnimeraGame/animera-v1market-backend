@@ -395,7 +395,7 @@ export class Web3Service implements OnModuleInit {
                 }
               }
 
-              if (name === 'Market') {
+              if (name === 'marketplace') {
                 const sellEvents = logs.map(log => {
                   console.log('log topic in Market :', log);
                   if (

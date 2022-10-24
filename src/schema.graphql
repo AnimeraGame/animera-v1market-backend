@@ -22,12 +22,10 @@ scalar BigInt
 
 input CreateEstateInput {
   buyer: String
-  buyer_signature: String
   expire_at: DateTime
   nft_id: Int
   price: String
   seller: String
-  seller_signature: String
   status: Int
   token_address: String
   type: Int
@@ -170,13 +168,11 @@ type Token {
 
 input UpdateEstateInput {
   buyer: String
-  buyer_signature: String
   expire_at: DateTime
   id: Int!
   nft_id: Int
   price: String
   seller: String
-  seller_signature: String
   status: Int
   token_address: String
   type: Int

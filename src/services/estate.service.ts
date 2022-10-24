@@ -336,8 +336,6 @@ export class EstateService {
           seller: data.seller,
           buyer: data.buyer,
           price: data.price,
-          seller_signature: data.seller_signature,
-          buyer_signature: data.buyer_signature,
           created_at: new Date(Date.now()),
           updated_at: new Date(Date.now()),
           expire_at: new Date(data.expire_at),
@@ -403,7 +401,7 @@ export class EstateService {
   async declineEstate(owner: User, data: UpdateEstateInput): Promise<estates> {
     try {
       const estate = await this.prisma.estates.update({
-        // @ts-ignore
+        // @ts-ignore : data-type
         data,
         where: {
           id: data.id
