@@ -147,6 +147,15 @@ export class EsateResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => Estate)
+  async updateEstateStatus(
+    @UserEntity() user: User,
+    @Args('data') data: UpdateEstateInput
+  ) {
+    return new Estate(await this.estateService.updateEstateStatus(user, data));
+  }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => Estate)
   async declineEstate(
     @UserEntity() user: User,
     @Args('data') data: UpdateEstateInput

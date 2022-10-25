@@ -95,6 +95,7 @@ type Mutation {
   declineEstate(data: UpdateEstateInput!): Estate!
   refreshToken(token: String!): Token!
   updateEstate(data: UpdateEstateInput!): Estate!
+  updateEstateStatus(data: UpdateEstateInput!): Estate!
   updateNftMetadata(data: String, meta_id: Int): NftMetadata!
   updateSaleInfoJson(data: String, nftId: Int): Nft!
 }
