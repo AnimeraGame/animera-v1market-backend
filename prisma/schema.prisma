@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  binaryTargets   = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
   previewFeatures = ["selectRelationCount", "filterJson", "orderByRelation"]
 }
 
@@ -113,6 +113,7 @@ model nfts {
   is_on_marketplace    Boolean       @default(false)
   last_sale            DateTime?     @db.Timestamp(6)
   estates              estates[]
+  history              history[]
 
   @@index([nft_metadata_id], name: "index_nfts_on_nft_metadata_id")
 }
@@ -148,4 +149,18 @@ model estates {
   @@index([nft_id], name: "index_sales_on_nft_id")
   @@index([closed_at], name: "index_sales_on_closed_at")
   @@index([status], name: "index_sales_on_status")
+}
+
+model history {
+  id         BigInt   @id @default(autoincrement())
+  tokenId    Int
+  from       String
+  to         String
+  price      String
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  nft nfts? @relation(fields: [tokenId], references: [token_id])
+
+  @@index([tokenId], name: "index_history_on_nft_id")
 }

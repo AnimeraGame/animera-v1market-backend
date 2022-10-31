@@ -403,24 +403,6 @@ export class EstateService {
     data: UpdateEstateInput
   ): Promise<estates> {
     try {
-      const currentEstate = await this.prisma.estates.findUnique({
-        where: { id: data.id }
-      });
-
-      if (
-        currentEstate.type === EstateType.sale &&
-        data.seller.toLowerCase() !== currentEstate.seller.toLowerCase()
-      ) {
-        throw new BadRequestException('Caller is not owner of this sale');
-      }
-
-      if (
-        currentEstate.type === EstateType.offer &&
-        owner.walletAddress.toLowerCase() !== currentEstate.buyer.toLowerCase()
-      ) {
-        throw new BadRequestException('Caller is not owner of this offer');
-      }
-
       const estate = await this.prisma.estates.update({
         // @ts-ignore
         data,
@@ -435,6 +417,18 @@ export class EstateService {
           }
         }
       });
+
+      await this.prisma.history.create({
+        data: {
+          tokenId: data.nft_id,
+          from: data.seller.toLowerCase(),
+          to: data.buyer.toLowerCase(),
+          price: data.price,
+          created_at: new Date(Date.now()),
+          updated_at: new Date(Date.now())
+        }
+      });
+
       return estate;
     } catch (e) {
       throw new BadRequestException(e.message);

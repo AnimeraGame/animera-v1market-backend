@@ -17,6 +17,7 @@ import { TransactionModule } from './resolvers/transaction/transaction.module';
 import { TestModule } from './resolvers/test/test.module';
 import { Web3Module } from './modules/web3.module';
 import { EstateModule } from './resolvers/estates/estates.module';
+import { HistoryModule } from './resolvers/history/history.module';
 import { BigIntScalar } from './common/scalars/bigint.scalar';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
@@ -38,6 +39,7 @@ import { GqlConfigService } from './gql-config.service';
     UserModule,
     NftModule,
     EstateModule,
+    HistoryModule,
     TransactionModule,
     // Web3Module,
     TestModule,
@@ -61,11 +63,7 @@ import { GqlConfigService } from './gql-config.service';
     })
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    AppResolver,
-    BigIntScalar
-  ],
+  providers: [AppService, AppResolver, BigIntScalar],
   exports: []
 })
 export class AppModule {}
